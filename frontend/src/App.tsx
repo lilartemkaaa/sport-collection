@@ -9,7 +9,9 @@ import Navbar from './components/Navbar'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
-  if (loading) return <div className="flex items-center justify-center h-screen text-slate-400">Загрузка...</div>
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen text-slate-400 text-sm">Загрузка...</div>
+  )
   return user ? <>{children}</> : <Navigate to="/login" replace />
 }
 
