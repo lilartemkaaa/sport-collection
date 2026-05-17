@@ -1,4 +1,5 @@
-import { useEffect, useState, FormEvent } from 'react'
+import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
 import { adminListCards, adminCreateCard, adminDeleteCard } from '../api/admin'
 import type { Card, League, Rarity } from '../api/types'
 
