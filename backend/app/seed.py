@@ -286,6 +286,96 @@ QUESTIONS = [
         "option_3": "Чикаго Буллз", "option_4": "Лос-Анджелес Лейкерс",
         "correct_option": 4,
     },
+
+    # === NHL ===
+    {
+        "question": "Сколько Кубков Стэнли выиграл Уэйн Гретцки?",
+        "option_1": "2", "option_2": "3", "option_3": "4", "option_4": "5",
+        "correct_option": 3,
+    },
+    {
+        "question": "Какой клуб НХЛ выиграл наибольшее количество Кубков Стэнли?",
+        "option_1": "Детройт Ред Уингз", "option_2": "Монреаль Канадиенс",
+        "option_3": "Торонто Мэйпл Лифс", "option_4": "Бостон Брюинз",
+        "correct_option": 2,
+    },
+    {
+        "question": "Александр Овечкин выступает за клуб:",
+        "option_1": "Питтсбург Пингвинз", "option_2": "Нью-Йорк Рейнджерс",
+        "option_3": "Вашингтон Кэпиталз", "option_4": "Тампа-Бэй Лайтнинг",
+        "correct_option": 3,
+    },
+    {
+        "question": "Сидни Кросби выступает за клуб:",
+        "option_1": "Бостон Брюинз", "option_2": "Питтсбург Пингвинз",
+        "option_3": "Торонто Мэйпл Лифс", "option_4": "Колорадо Эвеланш",
+        "correct_option": 2,
+    },
+    {
+        "question": "В каком городе базируется клуб «Торонто Мэйпл Лифс»?",
+        "option_1": "Монреаль", "option_2": "Оттава", "option_3": "Ванкувер", "option_4": "Торонто",
+        "correct_option": 4,
+    },
+    {
+        "question": "Сколько игроков (включая вратаря) находится на льду в одной команде?",
+        "option_1": "5", "option_2": "6", "option_3": "7", "option_4": "4",
+        "correct_option": 2,
+    },
+    {
+        "question": "В каком году Коннор МакДэвид был выбран первым на драфте НХЛ?",
+        "option_1": "2013", "option_2": "2014", "option_3": "2015", "option_4": "2016",
+        "correct_option": 3,
+    },
+    {
+        "question": "Как называется клуб НХЛ из Детройта?",
+        "option_1": "Detroit Red Wings", "option_2": "Detroit Lions",
+        "option_3": "Detroit Pistons", "option_4": "Detroit Coyotes",
+        "correct_option": 1,
+    },
+    {
+        "question": "Кто является рекордсменом НХЛ по голам и передачам за карьеру?",
+        "option_1": "Марио Лемье", "option_2": "Яромир Ягр",
+        "option_3": "Уэйн Гретцки", "option_4": "Стив Айзерман",
+        "correct_option": 3,
+    },
+    {
+        "question": "Остон Мэттьюс выступает за клуб:",
+        "option_1": "Бостон Брюинз", "option_2": "Монреаль Канадиенс",
+        "option_3": "Оттава Сенаторз", "option_4": "Торонто Мэйпл Лифс",
+        "correct_option": 4,
+    },
+    {
+        "question": "Сколько минут длится один период в регулярном матче НХЛ?",
+        "option_1": "15", "option_2": "20", "option_3": "25", "option_4": "30",
+        "correct_option": 2,
+    },
+    {
+        "question": "Натан Маккиннон выиграл Кубок Стэнли с «Колорадо Эвеланш» в году:",
+        "option_1": "2019", "option_2": "2021", "option_3": "2022", "option_4": "2023",
+        "correct_option": 3,
+    },
+    {
+        "question": "Как называется главный приз лучшему игроку регулярного сезона НХЛ?",
+        "option_1": "Трофей Харт", "option_2": "Кубок Стэнли",
+        "option_3": "Трофей Колдера", "option_4": "Трофей Везина",
+        "correct_option": 1,
+    },
+    {
+        "question": "Из какой страны родом Коннор МакДэвид?",
+        "option_1": "США", "option_2": "Швеция", "option_3": "Канада", "option_4": "Финляндия",
+        "correct_option": 3,
+    },
+    {
+        "question": "Кто выиграл Кубок Стэнли в 2024 году?",
+        "option_1": "Флорида Пантерз", "option_2": "Эдмонтон Ойлерз",
+        "option_3": "Нью-Йорк Рейнджерс", "option_4": "Ванкувер Кэнакс",
+        "correct_option": 1,
+    },
+    {
+        "question": "Сколько голов забил Уэйн Гретцки за карьеру в НХЛ (рекорд)?",
+        "option_1": "794", "option_2": "894", "option_3": "774", "option_4": "834",
+        "correct_option": 2,
+    },
 ]
 
 
@@ -294,6 +384,7 @@ def seed_db(db: Session) -> None:
         db.add_all([Card(**c) for c in CARDS])
         db.commit()
 
-    if db.query(QuizQuestion).count() == 0:
-        db.add_all([QuizQuestion(**q) for q in QUESTIONS])
+    existing = db.query(QuizQuestion).count()
+    if existing < len(QUESTIONS):
+        db.add_all([QuizQuestion(**q) for q in QUESTIONS[existing:]])
         db.commit()
