@@ -16,15 +16,21 @@ export default function Navbar() {
     <nav className="bg-slate-800 border-b border-slate-700">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link to="/" className="text-white font-bold text-lg tracking-tight">⚡ SportCards</Link>
-          <Link to="/collection" className="text-slate-300 hover:text-white text-sm transition-colors">Коллекция</Link>
-          {user?.role === 'admin' && (
-            <Link to="/admin" className="text-purple-400 hover:text-purple-300 text-sm transition-colors">Админ</Link>
-          )}
+          <Link to="/" className="text-white font-bold text-lg tracking-tight">SportCards</Link>
+          <div className="hidden sm:flex items-center gap-5">
+            <Link to="/" className="text-slate-300 hover:text-white text-sm transition-colors">Главная</Link>
+            <Link to="/collection" className="text-slate-300 hover:text-white text-sm transition-colors">Коллекция</Link>
+            {user?.role === 'admin' && (
+              <Link to="/admin" className="text-purple-400 hover:text-purple-300 text-sm transition-colors">Админ</Link>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-yellow-400 text-sm font-semibold">🎟 {user?.tickets_balance ?? 0}</span>
-          <span className="text-slate-400 text-sm">{user?.username}</span>
+          <div className="flex items-center gap-1.5 bg-slate-700 px-3 py-1 rounded-full">
+            <span className="text-yellow-400 text-sm font-bold">{user?.tickets_balance ?? 0}</span>
+            <span className="text-slate-400 text-xs">билетов</span>
+          </div>
+          <span className="text-slate-400 text-sm hidden sm:block">{user?.username}</span>
           <button onClick={handleLogout} className="text-slate-400 hover:text-white text-sm transition-colors">Выйти</button>
         </div>
       </div>
