@@ -1,21 +1,21 @@
 import type { Card } from '../api/types'
 
-const rarityStyles: Record<string, string> = {
-  common: 'border-slate-600 bg-slate-800',
-  rare: 'border-blue-500 bg-blue-950 shadow-blue-500/20 shadow-lg',
-  legendary: 'border-yellow-400 bg-yellow-950 shadow-yellow-400/20 shadow-xl',
+const rarityBorder: Record<string, string> = {
+  common: 'border-slate-600',
+  rare: 'border-blue-500',
+  legendary: 'border-amber-500',
 }
 
 const rarityBadge: Record<string, string> = {
-  common: 'bg-slate-600 text-slate-200',
-  rare: 'bg-blue-600 text-white',
-  legendary: 'bg-yellow-500 text-slate-900',
+  common: 'bg-slate-700 text-slate-400',
+  rare: 'bg-blue-900/50 text-blue-300',
+  legendary: 'bg-amber-900/50 text-amber-300',
 }
 
 const rarityLabel: Record<string, string> = {
-  common: 'Обычная',
-  rare: 'Редкая',
-  legendary: 'Легендарная',
+  common: 'Common',
+  rare: 'Rare',
+  legendary: 'Legendary',
 }
 
 const leagueLabel: Record<string, string> = {
@@ -26,19 +26,29 @@ const leagueLabel: Record<string, string> = {
 
 export default function CardDisplay({ card }: { card: Card }) {
   return (
-    <div className={`border-2 rounded-xl overflow-hidden ${rarityStyles[card.rarity]}`}>
-      {card.image_url ? (
-        <img src={card.image_url} alt={card.name} className="w-full h-40 object-cover object-top" />
-      ) : (
-        <div className="w-full h-40 flex items-center justify-center bg-slate-700">
-          <span className="text-slate-500 text-xs uppercase tracking-widest">нет фото</span>
-        </div>
-      )}
-      <div className="p-3 space-y-1.5">
-        <p className="text-white font-semibold text-sm truncate">{card.name}</p>
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-slate-400 text-xs">{leagueLabel[card.league]}</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${rarityBadge[card.rarity]}`}>
+    <div className={`border rounded-xl overflow-hidden bg-slate-800 flex flex-col ${rarityBorder[card.rarity]}`}>
+
+      {/* Картинка с фиксированными пропорциями */}
+      <div className="relative w-full overflow-hidden bg-slate-700" style={{ aspectRatio: '3/4' }}>
+        {card.image_url ? (
+          <img
+            src={card.image_url}
+            alt={card.name}
+            className="absolute inset-0 w-full h-full object-cover object-top"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-slate-600 text-xs uppercase tracking-widest">нет фото</span>
+          </div>
+        )}
+      </div>
+
+      {/* Мета-информация */}
+      <div className="p-2.5 space-y-1.5">
+        <p className="text-white text-xs font-medium truncate leading-snug">{card.name}</p>
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-slate-500 text-xs shrink-0">{leagueLabel[card.league]}</span>
+          <span className={`text-xs px-1.5 py-0.5 rounded font-medium shrink-0 ${rarityBadge[card.rarity]}`}>
             {rarityLabel[card.rarity]}
           </span>
         </div>
