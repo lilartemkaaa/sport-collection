@@ -21,11 +21,12 @@ def test_startup_seeds_and_idempotent(db):
     from app.seed import QUESTIONS
     Sess = sessionmaker(bind=test_engine, autoflush=False, autocommit=False)
     with patch("app.main.engine", test_engine), patch("app.main.SessionLocal", Sess):
+        from app.seed import CARDS
         startup()
-        assert db.query(Card).count() == 15
+        assert db.query(Card).count() == len(CARDS)
         assert db.query(QuizQuestion).count() == len(QUESTIONS)
         startup()  # idempotent
-        assert db.query(Card).count() == 15
+        assert db.query(Card).count() == len(CARDS)
 
 
 def test_get_db_generator(db):
