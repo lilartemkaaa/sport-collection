@@ -32,29 +32,27 @@ export default function LoginPage() {
   }
 
   const inputCls =
-    'w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 ' +
-    'rounded-xl px-4 py-3 text-white text-sm placeholder-slate-600 outline-none transition-all duration-200'
+    'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white ' +
+    'placeholder-slate-600 outline-none focus:border-indigo-500 transition-colors'
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
 
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-white tracking-tight">SportCards</h1>
-          <p className="text-slate-500 text-sm mt-2">Коллекционируй. Играй. Выигрывай.</p>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-white tracking-tight">SportCards</h1>
+          <p className="text-slate-500 text-sm mt-1">Коллекционируй. Соревнуйся. Побеждай.</p>
         </div>
 
-        <div className="bg-slate-800 border border-slate-700/50 p-8 rounded-2xl shadow-2xl flex flex-col gap-6">
+        <div className="bg-slate-800 rounded-2xl border border-slate-700/50 p-6 shadow-2xl">
 
-          <div className="flex rounded-xl bg-slate-900 p-1">
+          <div className="flex bg-slate-900 rounded-xl p-1 mb-6">
             {(['login', 'register'] as const).map(m => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setError('') }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  mode === m
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-slate-500 hover:text-slate-300'
+                  mode === m ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 {m === 'login' ? 'Войти' : 'Регистрация'}
@@ -62,38 +60,38 @@ export default function LoginPage() {
             ))}
           </div>
 
-          <form onSubmit={submit} className="flex flex-col gap-5">
+          <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="block text-slate-500 text-xs mb-2 uppercase tracking-widest">
+              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-1.5">
                 Логин
               </label>
               <input
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                className={inputCls}
-                placeholder="username"
-                autoComplete="username"
                 required
+                autoComplete="username"
+                placeholder="username"
+                className={inputCls}
               />
             </div>
 
             <div>
-              <label className="block text-slate-500 text-xs mb-2 uppercase tracking-widest">
+              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-1.5">
                 Пароль
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className={inputCls}
-                placeholder="••••••"
-                autoComplete="current-password"
                 required
+                autoComplete="current-password"
+                placeholder="••••••"
+                className={inputCls}
               />
             </div>
 
             {error && (
-              <div className="bg-red-950/60 border border-red-900/60 text-red-400 text-sm px-4 py-3 rounded-xl">
+              <div className="bg-red-950/50 border border-red-900/50 rounded-xl px-4 py-3 text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -101,10 +99,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40
-                         disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl
-                         transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]
-                         shadow-lg shadow-indigo-900/30"
+              className="w-full mt-2 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50
+                         text-white font-semibold text-sm rounded-xl transition-all
+                         active:scale-[0.98]"
             >
               {loading ? 'Загрузка...' : mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </button>
