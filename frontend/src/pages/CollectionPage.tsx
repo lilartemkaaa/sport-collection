@@ -6,8 +6,8 @@ import type { Card, League } from '../api/types'
 type Tab = 'all' | League
 
 const TABS: { value: Tab; label: string }[] = [
-  { value: 'all',      label: 'Все' },
-  { value: 'football', label: 'Футбол' },
+  { value: 'all',      label: 'Все лиги' },
+  { value: 'football', label: 'FOOTBALL' },
   { value: 'nba',      label: 'NBA' },
   { value: 'nhl',      label: 'NHL' },
 ]
@@ -29,21 +29,22 @@ export default function CollectionPage() {
   const visible = tab === 'all' ? cards : cards.filter(c => c.league === tab)
 
   if (loading) return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-slate-500 text-sm">
+    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
       Загрузка...
     </div>
   )
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8">
+    <div className="py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <h1 className="text-white font-semibold text-lg">Моя коллекция</h1>
           <span className="text-slate-500 text-sm">{cards.length} карточек</span>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
+        {/* Табы-фильтры */}
+        <div className="flex flex-wrap gap-3 justify-center mb-10">
           {TABS.map(t => {
             const count = t.value === 'all'
               ? cards.length
@@ -52,7 +53,7 @@ export default function CollectionPage() {
               <button
                 key={t.value}
                 onClick={() => setTab(t.value)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl border text-sm
                             font-medium transition-all duration-200 ${
                   tab === t.value
                     ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-900/30'
@@ -70,6 +71,7 @@ export default function CollectionPage() {
           })}
         </div>
 
+        {/* Сетка карточек */}
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3">
             <p className="text-white font-medium">Карточек нет</p>
