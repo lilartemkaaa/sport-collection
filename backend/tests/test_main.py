@@ -18,11 +18,12 @@ def test_startup_seeds_and_idempotent(db):
     db.query(QuizQuestion).delete()
     db.commit()
 
+    from app.seed import QUESTIONS
     Sess = sessionmaker(bind=test_engine, autoflush=False, autocommit=False)
     with patch("app.main.engine", test_engine), patch("app.main.SessionLocal", Sess):
         startup()
         assert db.query(Card).count() == 15
-        assert db.query(QuizQuestion).count() == 10
+        assert db.query(QuizQuestion).count() == len(QUESTIONS)
         startup()  # idempotent
         assert db.query(Card).count() == 15
 

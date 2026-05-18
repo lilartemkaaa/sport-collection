@@ -8,12 +8,14 @@ def test_seed_populates_empty_db(db):
     db.query(QuizQuestion).delete()
     db.commit()
 
+    from app.seed import QUESTIONS
     seed_db(db)
     assert db.query(Card).count() == 15
-    assert db.query(QuizQuestion).count() == 10
+    assert db.query(QuizQuestion).count() == len(QUESTIONS)
 
 
 def test_seed_is_idempotent(db):
+    from app.seed import QUESTIONS
     db.query(Card).delete()
     db.query(QuizQuestion).delete()
     db.commit()
@@ -21,4 +23,4 @@ def test_seed_is_idempotent(db):
     seed_db(db)
     seed_db(db)  # second call must not duplicate data
     assert db.query(Card).count() == 15
-    assert db.query(QuizQuestion).count() == 10
+    assert db.query(QuizQuestion).count() == len(QUESTIONS)

@@ -13,6 +13,12 @@ router = APIRouter(prefix="/api/packs", tags=["packs"])
 PACK_COST = 10
 RARITY_WEIGHTS = {Rarity.common: 60, Rarity.rare: 30, Rarity.legendary: 10}
 
+RARITY_NAMES = {
+    Rarity.common: "Common",
+    Rarity.rare: "Rare",
+    Rarity.legendary: "Legendary",
+}
+
 
 def _roll_rarity() -> Rarity:
     rarities = list(RARITY_WEIGHTS.keys())
@@ -29,16 +35,35 @@ def open_pack(
     if user.tickets_balance < PACK_COST:
         raise HTTPException(status_code=400, detail="Not enough tickets")
 
-    rarity = _roll_rarity()
-    cards = db.query(Card).filter(Card.league == body.league, Card.rarity == rarity).all()
-
-    if not cards:
-        # fallback на common если legendary/rare не найдены
-        cards = db.query(Card).filter(Card.league == body.league, Card.rarity == Rarity.common).all()
-    if not cards:
+    all_cards = db.query(Card).filter(Card.league == body.league).all()
+    if not all_cards:
         raise HTTPException(status_code=404, detail="No cards available for this league")
 
-    card = random.choice(cards)
+    owned_ids = {
+        row[0]
+        for row in db.query(UserCard.card_id).filter(UserCard.user_id == user.id).all()
+    }
+
+    rarity = _roll_rarity()
+    rarity_cards = [c for c in all_cards if c.rarity == rarity]
+    available = [c for c in rarity_cards if c.id not in owned_ids]
+
+    if not available:
+        if rarity_cards:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Все карточки {RARITY_NAMES[rarity]} в этой лиге уже собраны",
+            )
+        # нет карточек такой редкости в БД — fallback на common
+        common_cards = [c for c in all_cards if c.rarity == Rarity.common]
+        available = [c for c in common_cards if c.id not in owned_ids]
+        if not available:
+            raise HTTPException(
+                status_code=400,
+                detail="Все карточки Common в этой лиге уже собраны",
+            )
+
+    card = random.choice(available)
     user.tickets_balance -= PACK_COST
     db.add(UserCard(user_id=user.id, card_id=card.id))
     db.commit()
