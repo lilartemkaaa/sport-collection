@@ -5,11 +5,11 @@ import type { Card, League } from '../api/types'
 
 type Tab = 'all' | League
 
-const TABS: { value: Tab; label: string }[] = [
-  { value: 'all',      label: 'Все лиги' },
-  { value: 'football', label: 'FOOTBALL' },
-  { value: 'nba',      label: 'NBA' },
-  { value: 'nhl',      label: 'NHL' },
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'all',      label: 'Все лиги' },
+  { id: 'football', label: 'Футбол' },
+  { id: 'nba',      label: 'NBA' },
+  { id: 'nhl',      label: 'NHL' },
 ]
 
 export default function CollectionPage() {
@@ -21,7 +21,12 @@ export default function CollectionPage() {
     getCollection()
       .then(data => {
         const seen = new Set<number>()
-        setCards(data.filter(c => { if (seen.has(c.id)) return false; seen.add(c.id); return true }))
+        const unique = data.filter(c => {
+          if (seen.has(c.id)) return false
+          seen.add(c.id)
+          return true
+        })
+        setCards(unique)
       })
       .finally(() => setLoading(false))
   }, [])
@@ -29,40 +34,41 @@ export default function CollectionPage() {
   const visible = tab === 'all' ? cards : cards.filter(c => c.league === tab)
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-slate-500 text-sm">
       Загрузка...
     </div>
   )
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-[calc(100vh-64px)] flex flex-col">
+      <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10">
 
+        {/* Шапка */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-white font-semibold text-lg">Моя коллекция</h1>
-          <span className="text-slate-500 text-sm">{cards.length} карточек</span>
+          <span className="text-slate-500 text-sm tabular-nums">{cards.length} карточек</span>
         </div>
 
-        {/* Табы-фильтры */}
-        <div className="flex flex-wrap gap-3 justify-center mb-10">
+        {/* Вкладки лиг */}
+        <div className="flex flex-wrap gap-2 mb-8">
           {TABS.map(t => {
-            const count = t.value === 'all'
+            const count = t.id === 'all'
               ? cards.length
-              : cards.filter(c => c.league === t.value).length
+              : cards.filter(c => c.league === t.id).length
             return (
               <button
-                key={t.value}
-                onClick={() => setTab(t.value)}
-                className={`flex items-center gap-2 px-5 py-2 rounded-xl border text-sm
-                            font-medium transition-all duration-200 ${
-                  tab === t.value
-                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-900/30'
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium
+                            transition-all duration-200 ${
+                  tab === t.id
+                    ? 'bg-indigo-600 border-indigo-600 text-white'
                     : 'bg-slate-800 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-500'
                 }`}
               >
                 {t.label}
                 <span className={`text-xs tabular-nums ${
-                  tab === t.value ? 'text-indigo-200' : 'text-slate-600'
+                  tab === t.id ? 'text-indigo-200' : 'text-slate-600'
                 }`}>
                   {count}
                 </span>
@@ -71,18 +77,18 @@ export default function CollectionPage() {
           })}
         </div>
 
-        {/* Сетка карточек */}
+        {/* Контент */}
         {visible.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-3">
+          <div className="flex flex-col items-center justify-center py-32 gap-2">
             <p className="text-white font-medium">Карточек нет</p>
-            <p className="text-slate-500 text-sm text-center">
+            <p className="text-slate-500 text-sm">
               {cards.length === 0
                 ? 'Открывай паки на главной странице'
                 : 'В этой лиге карточек пока нет'}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
             {visible.map(card => (
               <CardDisplay key={card.id} card={card} />
             ))}
