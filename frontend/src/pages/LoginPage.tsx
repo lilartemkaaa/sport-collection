@@ -31,8 +31,12 @@ export default function LoginPage() {
     }
   }
 
+  const inputCls =
+    'w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 ' +
+    'rounded-xl px-4 py-3 text-white text-sm placeholder-slate-600 outline-none transition-all duration-200'
+
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
 
         <div className="text-center mb-10">
@@ -40,10 +44,9 @@ export default function LoginPage() {
           <p className="text-slate-500 text-sm mt-2">Коллекционируй. Играй. Выигрывай.</p>
         </div>
 
-        <div className="bg-slate-800 border border-slate-700/50 p-8 rounded-2xl shadow-2xl">
+        <div className="bg-slate-800 border border-slate-700/50 p-8 rounded-2xl shadow-2xl flex flex-col gap-6">
 
-          {/* Переключатель */}
-          <div className="flex rounded-xl bg-slate-900 p-1 mb-7">
+          <div className="flex rounded-xl bg-slate-900 p-1">
             {(['login', 'register'] as const).map(m => (
               <button
                 key={m}
@@ -59,7 +62,7 @@ export default function LoginPage() {
             ))}
           </div>
 
-          <form onSubmit={submit} className="space-y-5">
+          <form onSubmit={submit} className="flex flex-col gap-5">
             <div>
               <label className="block text-slate-500 text-xs mb-2 uppercase tracking-widest">
                 Логин
@@ -67,9 +70,7 @@ export default function LoginPage() {
               <input
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500
-                           rounded-xl px-4 py-3 text-white text-sm placeholder-slate-600
-                           outline-none transition-all duration-200"
+                className={inputCls}
                 placeholder="username"
                 autoComplete="username"
                 required
@@ -84,9 +85,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500
-                           rounded-xl px-4 py-3 text-white text-sm placeholder-slate-600
-                           outline-none transition-all duration-200"
+                className={inputCls}
                 placeholder="••••••"
                 autoComplete="current-password"
                 required
@@ -94,8 +93,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="bg-red-950/60 border border-red-900/60 text-red-400 text-sm
-                              px-4 py-3 rounded-xl">
+              <div className="bg-red-950/60 border border-red-900/60 text-red-400 text-sm px-4 py-3 rounded-xl">
                 {error}
               </div>
             )}
@@ -106,11 +104,9 @@ export default function LoginPage() {
               className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40
                          disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl
                          transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]
-                         shadow-lg shadow-indigo-900/30 mt-2"
+                         shadow-lg shadow-indigo-900/30"
             >
-              {loading
-                ? 'Загрузка...'
-                : mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+              {loading ? 'Загрузка...' : mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </button>
           </form>
         </div>
