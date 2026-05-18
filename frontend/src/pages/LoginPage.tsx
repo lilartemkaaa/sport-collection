@@ -32,26 +32,29 @@ export default function LoginPage() {
   }
 
   const inputCls =
-    'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white ' +
+    'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm ' +
     'placeholder-slate-600 outline-none focus:border-indigo-500 transition-colors'
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6">
+      <div className="w-full max-w-md">
 
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white tracking-tight">SportCards</h1>
-          <p className="text-slate-500 text-sm mt-1">Коллекционируй. Соревнуйся. Побеждай.</p>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold">
+            <span className="text-white">Sport</span><span className="text-indigo-400">Cards</span>
+          </h1>
+          <p className="text-slate-500 text-sm mt-2">Коллекционируй. Соревнуйся. Побеждай.</p>
         </div>
 
-        <div className="bg-slate-800 rounded-2xl border border-slate-700/50 p-6 shadow-2xl">
+        <div className="bg-slate-800 rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
 
-          <div className="flex bg-slate-900 rounded-xl p-1 mb-6">
+          {/* Переключатель режима */}
+          <div className="flex bg-slate-900 rounded-xl p-1 mb-7">
             {(['login', 'register'] as const).map(m => (
               <button
                 key={m}
                 onClick={() => { setMode(m); setError('') }}
-                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                   mode === m ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -60,9 +63,9 @@ export default function LoginPage() {
             ))}
           </div>
 
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} className="space-y-5">
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-1.5">
+              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-2">
                 Логин
               </label>
               <input
@@ -76,7 +79,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-1.5">
+              <label className="block text-xs text-slate-500 uppercase tracking-widest mb-2">
                 Пароль
               </label>
               <input
@@ -99,8 +102,8 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50
-                         text-white font-semibold text-sm rounded-xl transition-all
+              className="w-full py-3 mt-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50
+                         text-white font-semibold text-sm rounded-xl transition-colors
                          active:scale-[0.98]"
             >
               {loading ? 'Загрузка...' : mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
