@@ -4,15 +4,15 @@ import { adminListCards, adminCreateCard, adminDeleteCard } from '../api/admin'
 import type { Card, League, Rarity } from '../api/types'
 
 const fieldCls =
-  'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm ' +
-  'placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all duration-200'
-const labelCls = 'block text-slate-500 text-xs uppercase tracking-wider mb-1.5'
+  'w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl ' +
+  'px-4 py-3 text-white text-sm placeholder-slate-600 outline-none transition-all duration-200'
+const labelCls = 'block text-slate-500 text-xs uppercase tracking-widest mb-2'
 
 const RARITY_LABEL: Record<Rarity, string> = {
   common: 'Common', rare: 'Rare', legendary: 'Legendary',
 }
 const LEAGUE_LABEL: Record<League, string> = {
-  football: 'Футбол', nba: 'NBA', nhl: 'NHL',
+  football: 'Football', nba: 'NBA', nhl: 'NHL',
 }
 
 export default function AdminPage() {
@@ -50,11 +50,11 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-56px)] px-4 py-10">
+    <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
-        <h1 className="text-lg font-semibold text-white">Панель администратора</h1>
+        <h1 className="text-white font-semibold text-lg">Панель администратора</h1>
 
-        {/* Форма */}
+        {/* Форма добавления */}
         <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
           <h2 className="text-white font-medium text-sm mb-5">Добавить карточку</h2>
           <form onSubmit={handleCreate} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -71,7 +71,7 @@ export default function AdminPage() {
             <div>
               <label className={labelCls}>Лига</label>
               <select value={league} onChange={e => setLeague(e.target.value as League)} className={fieldCls}>
-                <option value="football">Футбол</option>
+                <option value="football">Football</option>
                 <option value="nba">NBA</option>
                 <option value="nhl">NHL</option>
               </select>
@@ -99,20 +99,23 @@ export default function AdminPage() {
                 type="submit"
                 disabled={creating}
                 className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40
-                           text-white font-medium px-6 py-2.5 rounded-xl
-                           transition-all duration-200 text-sm"
+                           text-white font-medium px-6 py-3 rounded-xl
+                           transition-all duration-200 text-sm
+                           hover:scale-[1.01] active:scale-[0.99]"
               >
-                {creating ? 'Создание...' : 'Добавить'}
+                {creating ? 'Создание...' : 'Добавить карточку'}
               </button>
             </div>
           </form>
         </div>
 
-        {/* Список карточек */}
+        {/* Список */}
         <div>
           <h2 className="text-white font-medium text-sm mb-4">
             Все карточки
-            {!loading && <span className="text-slate-500 font-normal ml-2">({cards.length})</span>}
+            {!loading && (
+              <span className="text-slate-500 font-normal ml-2">({cards.length})</span>
+            )}
           </h2>
           {loading ? (
             <p className="text-slate-500 text-sm">Загрузка...</p>
@@ -128,7 +131,7 @@ export default function AdminPage() {
                     {card.image_url && (
                       <img
                         src={card.image_url}
-                        className="w-8 h-8 rounded-lg object-cover object-top shrink-0"
+                        className="w-9 h-9 rounded-lg object-cover object-top shrink-0"
                         alt=""
                       />
                     )}
@@ -142,7 +145,7 @@ export default function AdminPage() {
                   <button
                     onClick={() => handleDelete(card.id)}
                     className="text-slate-600 hover:text-red-400 text-xs
-                               transition-all duration-200 shrink-0"
+                               transition-all duration-200 shrink-0 px-2 py-1"
                   >
                     Удалить
                   </button>

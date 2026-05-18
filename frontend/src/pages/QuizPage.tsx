@@ -63,7 +63,7 @@ export default function QuizPage() {
     ? [session.option_1, session.option_2, session.option_3, session.option_4]
     : []
 
-  const getOptionStyle = (idx: number) => {
+  const optionStyle = (idx: number) => {
     const num = idx + 1
     if (!result) {
       return 'bg-slate-700/30 border-slate-700 text-slate-200 hover:border-indigo-500 hover:bg-slate-700/60 hover:text-white'
@@ -74,40 +74,43 @@ export default function QuizPage() {
   }
 
   if (loading) return (
-    <div className="min-h-[calc(100vh-56px)] flex items-center justify-center text-slate-500 text-sm">
+    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
       Загрузка вопроса...
     </div>
   )
 
   return (
-    <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl mx-auto">
+    <div className="flex items-start justify-center px-4 sm:px-6 lg:px-8 py-10">
+      <div className="w-full max-w-2xl">
         <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
 
-          {/* Шапка: заголовок + таймер-плашка */}
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-white font-semibold text-base">Викторина</h2>
+          {/* Шапка: заголовок + таймер */}
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-white font-semibold">Викторина</h2>
             <span className={`px-3 py-1 rounded-full text-sm font-mono tabular-nums
-                             bg-slate-700/50 ${timeLeft <= 5 ? 'text-red-400' : 'text-indigo-400'}`}>
-              {timeLeft}с
+                             bg-slate-900/60 border border-slate-700 ${
+              timeLeft <= 5 ? 'text-red-400 border-red-900' : 'text-indigo-400'
+            }`}>
+              {timeLeft} с
             </span>
           </div>
 
           {/* Полоса таймера */}
-          <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden mb-8">
+          <div className="w-full h-1 bg-slate-700 rounded-full overflow-hidden mb-8">
             <div
-              className={`h-full rounded-full transition-all duration-1000
-                          ${timeLeft <= 5 ? 'bg-red-500' : 'bg-indigo-500'}`}
+              className={`h-full rounded-full transition-all duration-1000 ${
+                timeLeft <= 5 ? 'bg-red-500' : 'bg-indigo-500'
+              }`}
               style={{ width: `${(timeLeft / 20) * 100}%` }}
             />
           </div>
 
-          {/* Текст вопроса */}
-          <p className="text-xl font-semibold text-white text-center leading-relaxed mb-8">
+          {/* Вопрос */}
+          <p className="text-white text-lg font-medium text-center leading-relaxed mb-8">
             {session?.question}
           </p>
 
-          {/* Варианты ответов: 1 столбец → 2 столбца на sm+ */}
+          {/* Варианты: 1 колонка → 2×2 на sm */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {options.map((opt, i) => (
               <button
@@ -116,9 +119,9 @@ export default function QuizPage() {
                 disabled={!!result || submitting || timeLeft === 0}
                 className={`w-full p-5 text-left rounded-xl border font-medium text-sm
                             transition-all duration-200 active:scale-[0.98] disabled:cursor-default
-                            ${getOptionStyle(i)}`}
+                            ${optionStyle(i)}`}
               >
-                <span className="text-slate-500 text-xs font-mono mr-2">{i + 1}.</span>
+                <span className="text-slate-600 text-xs font-mono mr-2">{i + 1}.</span>
                 {opt}
               </button>
             ))}
@@ -137,9 +140,7 @@ export default function QuizPage() {
                 {result.correct ? 'Правильно' : 'Неверно'}
               </p>
               {result.tickets_earned > 0 && (
-                <p className="text-indigo-400 text-sm mt-1">
-                  +{result.tickets_earned} билетов
-                </p>
+                <p className="text-indigo-400 text-sm mt-1">+{result.tickets_earned} билетов</p>
               )}
               {!result.correct && timeLeft === 0 && (
                 <p className="text-slate-500 text-sm mt-1">Время вышло</p>
@@ -148,7 +149,8 @@ export default function QuizPage() {
                 <button
                   onClick={loadQuestion}
                   className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5
-                             rounded-xl font-medium transition-all duration-200 text-sm"
+                             rounded-xl font-medium transition-all duration-200 text-sm
+                             hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Следующий вопрос
                 </button>
