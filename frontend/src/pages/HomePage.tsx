@@ -69,8 +69,8 @@ export default function HomePage() {
 
         {/* Заголовок секции */}
         <div className="flex items-center justify-between">
-          <h2 className="text-white font-semibold text-base">Бустеры</h2>
-          <span className="text-slate-500 text-sm">10 билетов за пак</span>
+          <h2 className="text-white font-semibold text-base">Коллекционные наборы</h2>
+          <span className="text-slate-500 text-sm">10 билетов за набор</span>
         </div>
 
         {error && (
@@ -108,7 +108,7 @@ export default function HomePage() {
                            disabled:opacity-40 disabled:cursor-not-allowed
                            text-white text-sm font-semibold rounded-xl transition-colors mt-auto"
               >
-                {opening === p.league ? 'Открываем...' : 'Открыть за 10 билетов'}
+                {opening === p.league ? 'Открываем...' : 'Открыть набор — 10 билетов'}
               </button>
             </div>
           ))}

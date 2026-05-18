@@ -45,7 +45,7 @@ export default function CardDisplay({ card }: { card: Card }) {
           <span className="text-slate-600 text-xs uppercase tracking-widest">нет фото</span>
         </div>
       )}
-      <div className="p-2.5 space-y-1.5">
+      <div className="p-3.5 space-y-2">
         <p className="text-white text-xs font-medium truncate leading-snug">{card.name}</p>
         <div className="flex items-center justify-between gap-1">
           <span className="text-slate-500 text-xs shrink-0">{leagueLabel[card.league]}</span>
