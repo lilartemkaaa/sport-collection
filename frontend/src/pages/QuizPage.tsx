@@ -74,92 +74,92 @@ export default function QuizPage() {
   }
 
   if (loading) return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-slate-500 text-sm">
+    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
       Загрузка вопроса...
     </div>
   )
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
-      <div className="w-full max-w-2xl">
-        <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+    <div className="px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-2xl mx-auto bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
 
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-white font-semibold">Викторина</h2>
-            <span className={`px-3 py-1 rounded-full text-sm font-mono tabular-nums
-                             bg-slate-900/60 border border-slate-700 ${
-              timeLeft <= 5 ? 'text-red-400 border-red-900' : 'text-indigo-400'
-            }`}>
-              {timeLeft} с
-            </span>
-          </div>
-
-          <div className="w-full h-1 bg-slate-700 rounded-full overflow-hidden mb-8">
-            <div
-              className={`h-full rounded-full transition-all duration-1000 ${
-                timeLeft <= 5 ? 'bg-red-500' : 'bg-indigo-500'
-              }`}
-              style={{ width: `${(timeLeft / 20) * 100}%` }}
-            />
-          </div>
-
-          <p className="text-white text-lg font-medium text-center leading-relaxed mb-8">
-            {session?.question}
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {options.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => handleSubmit(i + 1)}
-                disabled={!!result || submitting || timeLeft === 0}
-                className={`w-full p-4 text-left rounded-xl border font-medium text-sm
-                            transition-all duration-200 active:scale-[0.98] disabled:cursor-default
-                            ${optionStyle(i)}`}
-              >
-                <span className="text-slate-600 text-xs font-mono mr-2">{i + 1}.</span>
-                {opt}
-              </button>
-            ))}
-          </div>
-
-          {result && (
-            <div className={`mt-6 rounded-xl p-5 border text-center ${
-              result.correct
-                ? 'bg-green-900/20 border-green-800/60'
-                : 'bg-red-900/20 border-red-800/60'
-            }`}>
-              <p className={`font-semibold text-lg ${
-                result.correct ? 'text-green-400' : 'text-red-400'
-              }`}>
-                {result.correct ? 'Правильно' : 'Неверно'}
-              </p>
-              {result.tickets_earned > 0 && (
-                <p className="text-indigo-400 text-sm mt-1">+{result.tickets_earned} билетов</p>
-              )}
-              {!result.correct && timeLeft === 0 && (
-                <p className="text-slate-500 text-sm mt-1">Время вышло</p>
-              )}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
-                <button
-                  onClick={loadQuestion}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5
-                             rounded-xl font-medium transition-all duration-200 text-sm
-                             hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Следующий вопрос
-                </button>
-                <button
-                  onClick={() => nav('/')}
-                  className="bg-slate-700 hover:bg-slate-600 text-slate-300 px-6 py-2.5
-                             rounded-xl font-medium transition-all duration-200 text-sm"
-                >
-                  На главную
-                </button>
-              </div>
-            </div>
-          )}
+        {/* Шапка: заголовок + таймер */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-white font-semibold">Викторина</h2>
+          <span className={`bg-slate-700/50 px-3 py-1 rounded-full text-sm font-mono tabular-nums ${
+            timeLeft <= 5 ? 'text-red-400' : 'text-indigo-400'
+          }`}>
+            {timeLeft} с
+          </span>
         </div>
+
+        {/* Полоса таймера */}
+        <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden mb-8">
+          <div
+            className={`h-full rounded-full transition-all duration-1000 ${
+              timeLeft <= 5 ? 'bg-red-500' : 'bg-indigo-500'
+            }`}
+            style={{ width: `${(timeLeft / 20) * 100}%` }}
+          />
+        </div>
+
+        {/* Вопрос */}
+        <p className="text-white text-lg font-medium text-center leading-relaxed mb-8">
+          {session?.question}
+        </p>
+
+        {/* Варианты ответов 2×2 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {options.map((opt, i) => (
+            <button
+              key={i}
+              onClick={() => handleSubmit(i + 1)}
+              disabled={!!result || submitting || timeLeft === 0}
+              className={`w-full p-5 text-left rounded-xl border font-medium text-sm
+                          transition-all duration-200 active:scale-[0.98] disabled:cursor-default
+                          ${optionStyle(i)}`}
+            >
+              <span className="text-slate-600 text-xs font-mono mr-2">{i + 1}.</span>
+              {opt}
+            </button>
+          ))}
+        </div>
+
+        {/* Результат */}
+        {result && (
+          <div className={`mt-6 rounded-xl p-5 border text-center ${
+            result.correct
+              ? 'bg-green-900/20 border-green-800/60'
+              : 'bg-red-900/20 border-red-800/60'
+          }`}>
+            <p className={`font-semibold text-lg ${result.correct ? 'text-green-400' : 'text-red-400'}`}>
+              {result.correct ? 'Правильно' : 'Неверно'}
+            </p>
+            {result.tickets_earned > 0 && (
+              <p className="text-indigo-400 text-sm mt-1">+{result.tickets_earned} билетов</p>
+            )}
+            {!result.correct && timeLeft === 0 && (
+              <p className="text-slate-500 text-sm mt-1">Время вышло</p>
+            )}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
+              <button
+                onClick={loadQuestion}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5
+                           rounded-xl font-medium transition-all duration-200 text-sm
+                           hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Следующий вопрос
+              </button>
+              <button
+                onClick={() => nav('/')}
+                className="bg-slate-700 hover:bg-slate-600 text-slate-300 px-6 py-2.5
+                           rounded-xl font-medium transition-all duration-200 text-sm"
+              >
+                На главную
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
