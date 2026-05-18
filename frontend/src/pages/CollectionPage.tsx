@@ -85,9 +85,11 @@ export default function CollectionPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 items-stretch">
             {visible.map(card => (
-              <CardDisplay key={card.id} card={card} />
+              <div key={card.id} className="aspect-[3/4] min-h-[280px]">
+                <CardDisplay card={card} />
+              </div>
             ))}
           </div>
         )}
