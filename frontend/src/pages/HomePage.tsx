@@ -6,10 +6,10 @@ import { getMe } from '../api/auth'
 import CardDisplay from '../components/CardDisplay'
 import type { Card, League } from '../api/types'
 
-const PACKS: { league: League; label: string; sublabel: string; accent: string }[] = [
-  { league: 'football', label: 'Футбол', sublabel: 'Лига Чемпионов', accent: 'from-green-800 to-emerald-950' },
-  { league: 'nba', label: 'NBA', sublabel: 'Баскетбол', accent: 'from-orange-800 to-red-950' },
-  { league: 'nhl', label: 'NHL', sublabel: 'Хоккей', accent: 'from-blue-800 to-indigo-950' },
+const PACKS: { league: League; label: string; desc: string }[] = [
+  { league: 'football', label: 'FOOTBALL', desc: 'Лига Чемпионов' },
+  { league: 'nba',     label: 'NBA',       desc: 'Баскетбол' },
+  { league: 'nhl',     label: 'NHL',       desc: 'Хоккей' },
 ]
 
 export default function HomePage() {
@@ -30,63 +30,77 @@ export default function HomePage() {
       setUser(me)
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-      setError(msg ?? 'Ошибка открытия пака')
+      setError(msg ?? 'Недостаточно билетов')
     } finally {
       setLoading(null)
     }
   }
 
   return (
-    <div className="space-y-10">
-      {/* Приветствие и баланс */}
-      <div className="text-center space-y-3">
-        <h1 className="text-3xl font-bold text-white">Привет, {user?.username}</h1>
-        <div className="inline-flex items-center gap-2 bg-slate-800 border border-slate-700 px-5 py-2 rounded-full">
-          <span className="text-yellow-400 text-lg font-bold">{user?.tickets_balance}</span>
-          <span className="text-slate-400 text-sm">билетов</span>
-        </div>
-      </div>
+    <div className="space-y-8">
 
-      {/* Кнопка викторины */}
-      <div className="flex justify-center">
+      {/* Виджет баланса + кнопка викторины */}
+      <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6
+                      flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+        <div>
+          <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Баланс</p>
+          <p className="text-3xl md:text-4xl font-light text-indigo-400 tabular-nums leading-none">
+            {user?.tickets_balance ?? 0}
+            <span className="text-base text-slate-500 font-normal ml-2">билетов</span>
+          </p>
+          <p className="text-slate-600 text-xs mt-1.5">{user?.username}</p>
+        </div>
         <button
           onClick={() => nav('/quiz')}
-          className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg text-sm"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-6 py-3
+                     rounded-xl transition-all duration-200 text-sm whitespace-nowrap
+                     self-start sm:self-center shrink-0"
         >
-          Пройти викторину — заработай билеты
+          Пройти викторину
         </button>
       </div>
 
-      {/* Паки */}
+      {/* Секция бустеров */}
       <div>
-        <h2 className="text-white text-lg font-semibold mb-4">Открыть пак — 10 билетов</h2>
+        <div className="flex items-baseline justify-between mb-5">
+          <h2 className="text-white font-semibold text-base">Открыть бустер</h2>
+          <span className="text-slate-500 text-sm">10 билетов за пак</span>
+        </div>
+
         {error && (
-          <p className="text-red-400 text-sm bg-red-900/20 border border-red-800/40 px-4 py-2.5 rounded-lg mb-4">
+          <div className="bg-red-950/50 border border-red-900/50 text-red-400 text-sm
+                          px-4 py-2.5 rounded-xl mb-5">
             {error}
-          </p>
+          </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {PACKS.map(p => (
             <div
               key={p.league}
-              className={`bg-gradient-to-br ${p.accent} rounded-2xl border border-white/10 overflow-hidden`}
+              className="bg-slate-800 border border-slate-700/50 rounded-2xl
+                         overflow-hidden flex flex-col"
             >
-              <div className="px-5 pt-5 pb-4">
-                <p className="text-white font-bold text-xl">{p.label}</p>
-                <p className="text-white/50 text-xs mt-0.5">{p.sublabel}</p>
-                <div className="flex gap-2 mt-3 text-xs text-white/40">
-                  <span>60% обычные</span>
-                  <span>·</span>
-                  <span>30% редкие</span>
-                  <span>·</span>
-                  <span>10% легендарные</span>
+              {/* Контент карточки пака */}
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center gap-2">
+                <p className="text-white font-bold text-2xl tracking-widest">{p.label}</p>
+                <p className="text-slate-500 text-sm">{p.desc}</p>
+                <div className="flex flex-wrap justify-center gap-x-3 mt-3 text-xs text-slate-600">
+                  <span>60% Common</span>
+                  <span>30% Rare</span>
+                  <span>10% Legendary</span>
                 </div>
               </div>
-              <div className="px-5 pb-5">
+
+              {/* Кнопка внизу */}
+              <div className="p-4 border-t border-slate-700/50">
                 <button
                   onClick={() => handleOpen(p.league)}
                   disabled={loading !== null}
-                  className="w-full bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-xl transition-all border border-white/15 text-sm"
+                  className="w-full bg-slate-700 hover:bg-indigo-600
+                             disabled:opacity-40 disabled:cursor-not-allowed
+                             text-white font-medium py-2.5 rounded-xl
+                             transition-all duration-200 text-sm"
                 >
                   {loading === p.league ? 'Открываем...' : 'Открыть за 10 билетов'}
                 </button>
@@ -96,22 +110,27 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Модальное окно с выпавшей карточкой */}
+      {/* Модальное окно с карточкой */}
       {wonCard && (
         <div
-          className="fixed inset-0 bg-black/75 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/75 flex items-center justify-center
+                     z-50 p-4 backdrop-blur-sm"
           onClick={() => setWonCard(null)}
         >
           <div
-            className="bg-slate-800 rounded-2xl p-6 max-w-xs w-full border border-slate-600 shadow-2xl"
+            className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6
+                       w-full max-w-xs shadow-2xl"
             onClick={e => e.stopPropagation()}
           >
-            <p className="text-white font-bold text-center mb-1">Поздравляем!</p>
-            <p className="text-slate-400 text-sm text-center mb-4">Вы получили карточку:</p>
+            <div className="text-center mb-4">
+              <p className="text-white font-semibold">Новая карточка</p>
+              <p className="text-slate-500 text-xs mt-0.5">Добавлена в коллекцию</p>
+            </div>
             <CardDisplay card={wonCard} />
             <button
               onClick={() => setWonCard(null)}
-              className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl font-semibold transition-colors text-sm"
+              className="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white
+                         py-2.5 rounded-xl font-medium transition-all duration-200 text-sm"
             >
               Отлично
             </button>
