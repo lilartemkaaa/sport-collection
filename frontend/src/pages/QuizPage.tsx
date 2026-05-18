@@ -18,9 +18,7 @@ export default function QuizPage() {
   const [submitting, setSubmitting] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const clearTimer = () => {
-    if (timerRef.current) clearInterval(timerRef.current)
-  }
+  const clearTimer = () => { if (timerRef.current) clearInterval(timerRef.current) }
 
   const loadQuestion = () => {
     clearTimer()
@@ -34,10 +32,7 @@ export default function QuizPage() {
       .catch(() => nav('/'))
   }
 
-  useEffect(() => {
-    loadQuestion()
-    return clearTimer
-  }, [])
+  useEffect(() => { loadQuestion(); return clearTimer }, [])
 
   useEffect(() => {
     if (!session || result) return
@@ -70,11 +65,11 @@ export default function QuizPage() {
 
   const optionCls = (idx: number) => {
     const n = idx + 1
-    const base = 'w-full p-5 text-left rounded-xl border text-sm font-medium transition-all duration-150 disabled:cursor-default'
+    const base = 'w-full p-5 text-left rounded-xl border text-sm font-medium transition-colors disabled:cursor-default'
     if (!result) return `${base} border-slate-700 bg-slate-700/20 text-slate-200 hover:border-indigo-500 hover:bg-slate-700/50`
     if (n === result.correct_option) return `${base} border-green-600 bg-green-900/25 text-green-300`
     if (n === selected && !result.correct) return `${base} border-red-600 bg-red-900/25 text-red-300`
-    return `${base} border-slate-700/40 bg-slate-800/30 text-slate-600`
+    return `${base} border-slate-700/40 bg-transparent text-slate-600`
   }
 
   if (loading) return (
@@ -84,23 +79,21 @@ export default function QuizPage() {
   )
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-start justify-center px-4 py-10">
+    <div className="min-h-[calc(100vh-64px)] flex items-start justify-center px-4 sm:px-6 py-10">
       <div className="w-full max-w-2xl">
         <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-xl">
 
-          {/* Шапка */}
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-white font-semibold text-base">Викторина</h2>
-            <span className={`px-3 py-1 rounded-full text-sm font-mono tabular-nums
-                             border ${timeLeft <= 5
-              ? 'text-red-400 border-red-900 bg-red-950/30'
-              : 'text-indigo-400 border-slate-700 bg-slate-900/50'
+            <h2 className="text-white font-semibold">Викторина</h2>
+            <span className={`px-3 py-1.5 rounded-xl text-sm font-mono tabular-nums border ${
+              timeLeft <= 5
+                ? 'text-red-400 border-red-800 bg-red-950/40'
+                : 'text-indigo-400 border-slate-700 bg-slate-900/60'
             }`}>
               {timeLeft} с
             </span>
           </div>
 
-          {/* Прогресс-бар таймера */}
           <div className="h-1 w-full bg-slate-700 rounded-full overflow-hidden mb-8">
             <div
               className={`h-full rounded-full transition-all duration-1000 ${
@@ -110,12 +103,10 @@ export default function QuizPage() {
             />
           </div>
 
-          {/* Вопрос */}
           <p className="text-white text-lg font-medium text-center leading-relaxed mb-8">
             {session?.question}
           </p>
 
-          {/* Варианты ответов */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {options.map((opt, i) => (
               <button
@@ -130,14 +121,13 @@ export default function QuizPage() {
             ))}
           </div>
 
-          {/* Блок результата */}
           {result && (
-            <div className={`mt-6 rounded-xl border p-5 text-center ${
+            <div className={`mt-6 rounded-xl border p-6 text-center ${
               result.correct
                 ? 'bg-green-950/30 border-green-800/50'
                 : 'bg-red-950/30 border-red-800/50'
             }`}>
-              <p className={`font-bold text-lg ${result.correct ? 'text-green-400' : 'text-red-400'}`}>
+              <p className={`font-bold text-xl ${result.correct ? 'text-green-400' : 'text-red-400'}`}>
                 {result.correct ? 'Правильно' : 'Неверно'}
               </p>
               {result.tickets_earned > 0 && (
@@ -146,18 +136,18 @@ export default function QuizPage() {
               {!result.correct && selected === 0 && (
                 <p className="text-slate-500 text-sm mt-1">Время вышло</p>
               )}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-5">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
                 <button
                   onClick={loadQuestion}
                   className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white
-                             text-sm font-semibold rounded-xl transition-all active:scale-[0.98]"
+                             text-sm font-semibold rounded-xl transition-colors active:scale-[0.98]"
                 >
                   Следующий вопрос
                 </button>
                 <button
                   onClick={() => nav('/')}
                   className="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300
-                             text-sm font-medium rounded-xl transition-all"
+                             text-sm font-medium rounded-xl transition-colors"
                 >
                   На главную
                 </button>

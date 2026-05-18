@@ -21,12 +21,11 @@ export default function CollectionPage() {
     getCollection()
       .then(data => {
         const seen = new Set<number>()
-        const unique = data.filter(c => {
+        setCards(data.filter(c => {
           if (seen.has(c.id)) return false
           seen.add(c.id)
           return true
-        })
-        setCards(unique)
+        }))
       })
       .finally(() => setLoading(false))
   }, [])
@@ -41,15 +40,14 @@ export default function CollectionPage() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col">
-      <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        {/* Шапка */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-white font-semibold text-lg">Моя коллекция</h1>
           <span className="text-slate-500 text-sm tabular-nums">{cards.length} карточек</span>
         </div>
 
-        {/* Вкладки лиг */}
+        {/* Вкладки */}
         <div className="flex flex-wrap gap-2 mb-8">
           {TABS.map(t => {
             const count = t.id === 'all'
@@ -59,8 +57,8 @@ export default function CollectionPage() {
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium
-                            transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm
+                            font-medium transition-colors ${
                   tab === t.id
                     ? 'bg-indigo-600 border-indigo-600 text-white'
                     : 'bg-slate-800 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-500'
@@ -77,7 +75,6 @@ export default function CollectionPage() {
           })}
         </div>
 
-        {/* Контент */}
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 gap-2">
             <p className="text-white font-medium">Карточек нет</p>
@@ -88,7 +85,7 @@ export default function CollectionPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
             {visible.map(card => (
               <CardDisplay key={card.id} card={card} />
             ))}
