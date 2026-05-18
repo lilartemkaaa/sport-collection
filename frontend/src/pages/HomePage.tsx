@@ -80,12 +80,12 @@ export default function HomePage() {
         )}
 
         {/* Сетка паков — 3 колонки, заполняет весь контейнер */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {PACKS.map(p => (
             <div
               key={p.league}
-              className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8
-                         flex flex-col gap-8 hover:border-slate-600 transition-colors"
+              className="aspect-[3/4] min-h-[400px] bg-slate-800 border border-slate-700/50 rounded-2xl p-8
+                         flex flex-col justify-between hover:border-slate-600 transition-colors"
             >
               <div>
                 <p className="text-white font-bold text-3xl tracking-wide">{p.label}</p>
@@ -106,7 +106,7 @@ export default function HomePage() {
                 disabled={opening !== null}
                 className="w-full py-3 bg-slate-700 hover:bg-indigo-600
                            disabled:opacity-40 disabled:cursor-not-allowed
-                           text-white text-sm font-semibold rounded-xl transition-colors mt-auto"
+                           text-white text-sm font-semibold rounded-xl transition-colors"
               >
                 {opening === p.league ? 'Открываем...' : 'Открыть набор — 10 билетов'}
               </button>
@@ -129,7 +129,9 @@ export default function HomePage() {
               <p className="text-white font-semibold">Новая карточка</p>
               <p className="text-slate-500 text-xs mt-1">Добавлена в коллекцию</p>
             </div>
-            <CardDisplay card={wonCard} />
+            <div className="aspect-[3/4]">
+              <CardDisplay card={wonCard} />
+            </div>
             <button
               onClick={() => setWonCard(null)}
               className="mt-4 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white
