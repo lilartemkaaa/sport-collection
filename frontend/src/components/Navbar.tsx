@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { logout } from '../api/auth'
 
@@ -15,61 +15,62 @@ export default function Navbar() {
     setOpen(false)
   }
 
-  const close = () => setOpen(false)
+  const navLinkCls = ({ isActive }: { isActive: boolean }) =>
+    `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+      isActive
+        ? 'text-white bg-slate-800'
+        : 'text-slate-400 hover:text-white hover:bg-slate-800/70'
+    }`
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
+    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center h-16 gap-8">
 
           {/* Логотип */}
-          <Link to="/" className="text-white font-semibold text-sm tracking-tight shrink-0">
-            SportCards
+          <Link to="/" className="shrink-0 text-base font-bold tracking-tight">
+            <span className="text-white">Sport</span><span className="text-indigo-400">Cards</span>
           </Link>
 
-          {/* Навигация — только десктоп */}
-          <nav className="hidden md:flex items-center gap-6 flex-1 ml-8">
-            <Link to="/" className="text-slate-400 hover:text-white text-sm transition-all duration-200">
-              Главная
-            </Link>
-            <Link to="/collection" className="text-slate-400 hover:text-white text-sm transition-all duration-200">
-              Коллекция
-            </Link>
+          {/* Навигация — десктоп */}
+          <nav className="hidden md:flex items-center gap-1 flex-1">
+            <NavLink to="/" end className={navLinkCls}>Главная</NavLink>
+            <NavLink to="/collection" className={navLinkCls}>Коллекция</NavLink>
             {user?.role === 'admin' && (
-              <Link to="/admin" className="text-indigo-400 hover:text-indigo-300 text-sm transition-all duration-200">
-                Админ
-              </Link>
+              <NavLink to="/admin" className={navLinkCls}>Администратор</NavLink>
             )}
           </nav>
 
           {/* Правая часть — десктоп */}
-          <div className="hidden md:flex items-center gap-4 shrink-0">
-            <div className="flex items-center gap-1.5 bg-slate-800 border border-slate-700/50 px-3 py-1 rounded-full">
-              <span className="text-indigo-400 font-semibold text-sm tabular-nums">
+          <div className="hidden md:flex items-center gap-3 ml-auto shrink-0">
+            <div className="flex items-center gap-2 bg-slate-800 border border-slate-700/60 rounded-xl px-4 py-2">
+              <span className="text-indigo-400 font-bold text-sm tabular-nums">
                 {user?.tickets_balance ?? 0}
               </span>
               <span className="text-slate-500 text-xs">билетов</span>
             </div>
-            <span className="text-slate-500 text-sm">{user?.username}</span>
+            <div className="w-px h-5 bg-slate-700 mx-1" />
+            <span className="text-slate-300 text-sm">{user?.username}</span>
             <button
               onClick={handleLogout}
-              className="text-slate-400 hover:text-white text-sm transition-all duration-200"
+              className="px-3 py-1.5 text-sm text-slate-400 hover:text-white border border-slate-700/60
+                         hover:border-slate-500 rounded-lg transition-colors"
             >
               Выйти
             </button>
           </div>
 
-          {/* Мобильный правый блок: баланс + гамбургер */}
-          <div className="flex md:hidden items-center gap-3 shrink-0">
-            <div className="flex items-center gap-1 bg-slate-800 border border-slate-700/50 px-2.5 py-1 rounded-full">
-              <span className="text-indigo-400 font-semibold text-xs tabular-nums">
+          {/* Мобильная правая часть */}
+          <div className="flex md:hidden items-center gap-4 ml-auto shrink-0">
+            <div className="flex items-center gap-1.5 bg-slate-800 border border-slate-700/60 rounded-xl px-3 py-1.5">
+              <span className="text-indigo-400 font-bold text-xs tabular-nums">
                 {user?.tickets_balance ?? 0}
               </span>
               <span className="text-slate-500 text-xs">б.</span>
             </div>
             <button
               onClick={() => setOpen(o => !o)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg transition-all duration-200"
+              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               aria-label="Меню"
             >
               {open ? (
@@ -85,33 +86,31 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Мобильное выпадающее меню */}
+        {/* Мобильное меню */}
         {open && (
-          <div className="md:hidden border-t border-slate-800 py-2 space-y-0.5">
-            <Link to="/" onClick={close}
-              className="flex items-center px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg text-sm transition-all duration-200">
+          <nav className="md:hidden border-t border-slate-800 py-3 space-y-1">
+            <NavLink to="/" end className={navLinkCls} onClick={() => setOpen(false)}>
               Главная
-            </Link>
-            <Link to="/collection" onClick={close}
-              className="flex items-center px-3 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg text-sm transition-all duration-200">
+            </NavLink>
+            <NavLink to="/collection" className={navLinkCls} onClick={() => setOpen(false)}>
               Коллекция
-            </Link>
+            </NavLink>
             {user?.role === 'admin' && (
-              <Link to="/admin" onClick={close}
-                className="flex items-center px-3 py-2.5 text-indigo-400 hover:text-indigo-300 hover:bg-slate-800 rounded-lg text-sm transition-all duration-200">
-                Админ
-              </Link>
+              <NavLink to="/admin" className={navLinkCls} onClick={() => setOpen(false)}>
+                Администратор
+              </NavLink>
             )}
-            <div className="border-t border-slate-800 mt-2 pt-2 flex items-center justify-between px-3">
-              <span className="text-slate-500 text-sm">{user?.username}</span>
+            <div className="border-t border-slate-800 mt-3 pt-3 px-1 flex items-center justify-between">
+              <span className="text-slate-400 text-sm px-2">{user?.username}</span>
               <button
                 onClick={handleLogout}
-                className="text-slate-400 hover:text-white text-sm transition-all duration-200"
+                className="px-3 py-1.5 text-sm text-slate-400 hover:text-white border border-slate-700/60
+                           hover:border-slate-500 rounded-lg transition-colors"
               >
                 Выйти
               </button>
             </div>
-          </div>
+          </nav>
         )}
       </div>
     </header>
