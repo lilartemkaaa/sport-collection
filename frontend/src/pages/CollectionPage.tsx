@@ -6,8 +6,8 @@ import type { Card, League } from '../api/types'
 type Tab = 'all' | League
 
 const TABS: { value: Tab; label: string }[] = [
-  { value: 'all',      label: 'Все лиги' },
-  { value: 'football', label: 'Football' },
+  { value: 'all',      label: 'Все' },
+  { value: 'football', label: 'Футбол' },
   { value: 'nba',      label: 'NBA' },
   { value: 'nhl',      label: 'NHL' },
 ]
@@ -18,13 +18,18 @@ export default function CollectionPage() {
   const [tab, setTab] = useState<Tab>('all')
 
   useEffect(() => {
-    getCollection().then(setCards).finally(() => setLoading(false))
+    getCollection()
+      .then(data => {
+        const seen = new Set<number>()
+        setCards(data.filter(c => { if (seen.has(c.id)) return false; seen.add(c.id); return true }))
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   const visible = tab === 'all' ? cards : cards.filter(c => c.league === tab)
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-slate-500 text-sm">
       Загрузка...
     </div>
   )
@@ -33,13 +38,11 @@ export default function CollectionPage() {
     <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
 
-        {/* Шапка */}
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-white font-semibold text-lg">Моя коллекция</h1>
           <span className="text-slate-500 text-sm">{cards.length} карточек</span>
         </div>
 
-        {/* Вкладки-фильтры */}
         <div className="flex flex-wrap gap-2 mb-8">
           {TABS.map(t => {
             const count = t.value === 'all'
@@ -67,7 +70,6 @@ export default function CollectionPage() {
           })}
         </div>
 
-        {/* Сетка карточек */}
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3">
             <p className="text-white font-medium">Карточек нет</p>

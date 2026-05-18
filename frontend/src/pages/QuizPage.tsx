@@ -74,17 +74,16 @@ export default function QuizPage() {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-slate-500 text-sm">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center text-slate-500 text-sm">
       Загрузка вопроса...
     </div>
   )
 
   return (
-    <div className="flex items-start justify-center px-4 sm:px-6 lg:px-8 py-10">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
       <div className="w-full max-w-2xl">
         <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
 
-          {/* Шапка: заголовок + таймер */}
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-white font-semibold">Викторина</h2>
             <span className={`px-3 py-1 rounded-full text-sm font-mono tabular-nums
@@ -95,7 +94,6 @@ export default function QuizPage() {
             </span>
           </div>
 
-          {/* Полоса таймера */}
           <div className="w-full h-1 bg-slate-700 rounded-full overflow-hidden mb-8">
             <div
               className={`h-full rounded-full transition-all duration-1000 ${
@@ -105,19 +103,17 @@ export default function QuizPage() {
             />
           </div>
 
-          {/* Вопрос */}
           <p className="text-white text-lg font-medium text-center leading-relaxed mb-8">
             {session?.question}
           </p>
 
-          {/* Варианты: 1 колонка → 2×2 на sm */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {options.map((opt, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmit(i + 1)}
                 disabled={!!result || submitting || timeLeft === 0}
-                className={`w-full p-5 text-left rounded-xl border font-medium text-sm
+                className={`w-full p-4 text-left rounded-xl border font-medium text-sm
                             transition-all duration-200 active:scale-[0.98] disabled:cursor-default
                             ${optionStyle(i)}`}
               >
@@ -127,7 +123,6 @@ export default function QuizPage() {
             ))}
           </div>
 
-          {/* Результат */}
           {result && (
             <div className={`mt-6 rounded-xl p-5 border text-center ${
               result.correct
