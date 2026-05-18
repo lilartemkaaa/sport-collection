@@ -50,7 +50,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8">
+    <div className="py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
         <h1 className="text-white font-semibold text-lg">Панель администратора</h1>
 
@@ -144,8 +144,9 @@ export default function AdminPage() {
                   </div>
                   <button
                     onClick={() => handleDelete(card.id)}
-                    className="text-slate-600 hover:text-red-400 text-xs
-                               transition-all duration-200 shrink-0 px-2 py-1"
+                    className="text-slate-500 hover:text-red-400 text-xs border border-slate-700
+                               hover:border-red-900/60 rounded-lg transition-all duration-200
+                               shrink-0 px-3 py-1.5"
                   >
                     Удалить
                   </button>
