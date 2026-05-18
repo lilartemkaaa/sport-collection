@@ -43,30 +43,31 @@ export default function HomePage() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex flex-col">
-      <div className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-8">
 
         {/* Панель баланса */}
-        <div className="bg-slate-800 border border-slate-700/50 rounded-2xl px-6 py-5
-                        flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="w-full bg-slate-800 border border-slate-700/50 rounded-2xl px-8 py-6
+                        flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div>
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-2">Баланс</p>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-light text-white tabular-nums leading-none">
                 {user?.tickets_balance ?? 0}
               </span>
-              <span className="text-slate-500 text-sm">билетов</span>
+              <span className="text-slate-500 text-base">билетов</span>
             </div>
           </div>
           <button
             onClick={() => nav('/quiz')}
-            className="w-full sm:w-auto px-7 py-3 bg-indigo-600 hover:bg-indigo-500
-                       text-white font-semibold text-sm rounded-xl transition-all active:scale-[0.98]"
+            className="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-500
+                       text-white font-semibold text-sm rounded-xl transition-colors
+                       active:scale-[0.98]"
           >
             Пройти викторину
           </button>
         </div>
 
-        {/* Заголовок паков */}
+        {/* Заголовок секции */}
         <div className="flex items-center justify-between">
           <h2 className="text-white font-semibold text-base">Бустеры</h2>
           <span className="text-slate-500 text-sm">10 билетов за пак</span>
@@ -78,22 +79,22 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Сетка паков */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        {/* Сетка паков — 3 колонки, заполняет весь контейнер */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {PACKS.map(p => (
             <div
               key={p.league}
-              className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6
-                         flex flex-col gap-6 hover:border-slate-600 transition-colors"
+              className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8
+                         flex flex-col gap-8 hover:border-slate-600 transition-colors"
             >
               <div>
-                <p className="text-white font-bold text-2xl tracking-wide">{p.label}</p>
-                <p className="text-slate-500 text-sm mt-1">{p.sub}</p>
+                <p className="text-white font-bold text-3xl tracking-wide">{p.label}</p>
+                <p className="text-slate-500 text-sm mt-1.5">{p.sub}</p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {DROP_RATES.map(r => (
-                  <div key={r.label} className="flex justify-between items-center text-xs">
+                  <div key={r.label} className="flex justify-between items-center text-sm">
                     <span className={r.cls}>{r.label}</span>
                     <span className="text-slate-400 font-mono">{r.pct}</span>
                   </div>
@@ -105,7 +106,7 @@ export default function HomePage() {
                 disabled={opening !== null}
                 className="w-full py-3 bg-slate-700 hover:bg-indigo-600
                            disabled:opacity-40 disabled:cursor-not-allowed
-                           text-white text-sm font-medium rounded-xl transition-all"
+                           text-white text-sm font-semibold rounded-xl transition-colors mt-auto"
               >
                 {opening === p.league ? 'Открываем...' : 'Открыть за 10 билетов'}
               </button>
@@ -114,7 +115,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Модалка выигрыша */}
+      {/* Модалка */}
       {wonCard && (
         <div
           className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 p-4"
@@ -125,14 +126,14 @@ export default function HomePage() {
             onClick={e => e.stopPropagation()}
           >
             <div className="text-center mb-4">
-              <p className="text-white font-semibold text-base">Новая карточка</p>
+              <p className="text-white font-semibold">Новая карточка</p>
               <p className="text-slate-500 text-xs mt-1">Добавлена в коллекцию</p>
             </div>
             <CardDisplay card={wonCard} />
             <button
               onClick={() => setWonCard(null)}
               className="mt-4 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white
-                         text-sm font-semibold rounded-xl transition-all"
+                         text-sm font-semibold rounded-xl transition-colors"
             >
               Отлично
             </button>
