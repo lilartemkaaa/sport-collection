@@ -10,7 +10,9 @@ import Navbar from './components/Navbar'
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
   if (loading) return (
-    <div className="flex items-center justify-center h-screen text-slate-400 text-sm">Загрузка...</div>
+    <div className="flex items-center justify-center h-screen text-slate-500 text-sm bg-slate-900">
+      Загрузка...
+    </div>
   )
   return user ? <>{children}</> : <Navigate to="/login" replace />
 }
@@ -25,7 +27,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-900">
       <Navbar />
-      <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
     </div>
   )
 }

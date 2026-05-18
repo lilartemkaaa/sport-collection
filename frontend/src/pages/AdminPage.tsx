@@ -3,12 +3,21 @@ import type { FormEvent } from 'react'
 import { adminListCards, adminCreateCard, adminDeleteCard } from '../api/admin'
 import type { Card, League, Rarity } from '../api/types'
 
-const inputCls = 'w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors placeholder-slate-500'
-const selectCls = 'w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors'
-const labelCls = 'block text-slate-400 text-xs mb-1.5 uppercase tracking-wide font-medium'
+const inputCls =
+  'w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm ' +
+  'focus:outline-none focus:border-indigo-500 transition-all duration-200 placeholder-slate-600'
+const labelCls = 'block text-slate-500 text-xs mb-1.5 uppercase tracking-wider'
 
-const RARITY_LABEL: Record<Rarity, string> = { common: 'Обычная', rare: 'Редкая', legendary: 'Легендарная' }
-const LEAGUE_LABEL: Record<League, string> = { football: 'Футбол', nba: 'NBA', nhl: 'NHL' }
+const RARITY_LABEL: Record<Rarity, string> = {
+  common: 'Common',
+  rare: 'Rare',
+  legendary: 'Legendary',
+}
+const LEAGUE_LABEL: Record<League, string> = {
+  football: 'Футбол',
+  nba: 'NBA',
+  nhl: 'NHL',
+}
 
 export default function AdminPage() {
   const [cards, setCards] = useState<Card[]>([])
@@ -46,11 +55,11 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-8 max-w-3xl">
-      <h1 className="text-2xl font-bold text-white">Панель администратора</h1>
+      <h1 className="text-lg font-semibold text-white">Панель администратора</h1>
 
       {/* Форма создания */}
-      <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-        <h2 className="text-white font-semibold mb-5">Добавить карточку</h2>
+      <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6">
+        <h2 className="text-white font-medium mb-5 text-sm">Добавить карточку</h2>
         <form onSubmit={handleCreate} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
             <label className={labelCls}>Имя игрока</label>
@@ -64,7 +73,11 @@ export default function AdminPage() {
           </div>
           <div>
             <label className={labelCls}>Лига</label>
-            <select value={league} onChange={e => setLeague(e.target.value as League)} className={selectCls}>
+            <select
+              value={league}
+              onChange={e => setLeague(e.target.value as League)}
+              className={inputCls}
+            >
               <option value="football">Футбол</option>
               <option value="nba">NBA</option>
               <option value="nhl">NHL</option>
@@ -72,10 +85,14 @@ export default function AdminPage() {
           </div>
           <div>
             <label className={labelCls}>Редкость</label>
-            <select value={rarity} onChange={e => setRarity(e.target.value as Rarity)} className={selectCls}>
-              <option value="common">Обычная</option>
-              <option value="rare">Редкая</option>
-              <option value="legendary">Легендарная</option>
+            <select
+              value={rarity}
+              onChange={e => setRarity(e.target.value as Rarity)}
+              className={inputCls}
+            >
+              <option value="common">Common</option>
+              <option value="rare">Rare</option>
+              <option value="legendary">Legendary</option>
             </select>
           </div>
           <div className="sm:col-span-2">
@@ -87,14 +104,18 @@ export default function AdminPage() {
               placeholder="https://..."
             />
           </div>
-          {error && <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>}
+          {error && (
+            <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>
+          )}
           <div className="sm:col-span-2">
             <button
               type="submit"
               disabled={creating}
-              className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm"
+              className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40
+                         text-white font-medium px-5 py-2.5 rounded-xl
+                         transition-all duration-200 text-sm"
             >
-              {creating ? 'Создание...' : 'Добавить карточку'}
+              {creating ? 'Создание...' : 'Добавить'}
             </button>
           </div>
         </form>
@@ -102,33 +123,41 @@ export default function AdminPage() {
 
       {/* Список карточек */}
       <div>
-        <h2 className="text-white font-semibold mb-4">
+        <h2 className="text-white font-medium text-sm mb-4">
           Все карточки
-          {!loading && <span className="text-slate-400 font-normal text-sm ml-2">({cards.length})</span>}
+          {!loading && (
+            <span className="text-slate-500 font-normal ml-2">({cards.length})</span>
+          )}
         </h2>
         {loading ? (
-          <p className="text-slate-400 text-sm">Загрузка...</p>
+          <p className="text-slate-500 text-sm">Загрузка...</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {cards.map(card => (
               <div
                 key={card.id}
-                className="flex items-center justify-between bg-slate-800 rounded-xl px-4 py-3 border border-slate-700"
+                className="flex items-center justify-between bg-slate-800 border border-slate-700/50
+                           rounded-xl px-4 py-3 gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   {card.image_url && (
-                    <img src={card.image_url} className="w-9 h-9 rounded-lg object-cover object-top shrink-0" alt="" />
+                    <img
+                      src={card.image_url}
+                      className="w-8 h-8 rounded-lg object-cover object-top shrink-0"
+                      alt=""
+                    />
                   )}
                   <div className="min-w-0">
-                    <p className="text-white font-medium text-sm truncate">{card.name}</p>
-                    <p className="text-slate-400 text-xs">
+                    <p className="text-white text-sm truncate">{card.name}</p>
+                    <p className="text-slate-500 text-xs">
                       {LEAGUE_LABEL[card.league]} · {RARITY_LABEL[card.rarity]}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => handleDelete(card.id)}
-                  className="text-slate-500 hover:text-red-400 text-sm transition-colors ml-4 shrink-0"
+                  className="text-slate-600 hover:text-red-400 text-xs transition-all
+                             duration-200 shrink-0 px-2 py-1"
                 >
                   Удалить
                 </button>
