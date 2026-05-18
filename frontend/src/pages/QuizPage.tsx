@@ -79,7 +79,7 @@ export default function QuizPage() {
   )
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-start justify-center px-4 sm:px-6 py-10">
+    <div className="min-h-[calc(100vh-64px)] flex items-start justify-center px-4 sm:px-6 py-10 w-full">
       <div className="w-full max-w-2xl">
         <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-8 shadow-xl">
 

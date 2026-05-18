@@ -50,7 +50,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8">
+    <div className="py-10 px-4 sm:px-6 lg:px-8 w-full">
       <div className="max-w-3xl mx-auto space-y-8">
         <h1 className="text-white font-semibold text-lg">Панель администратора</h1>
 

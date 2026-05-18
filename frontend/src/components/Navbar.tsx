@@ -23,9 +23,7 @@ export default function Navbar() {
     }`
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md">
-      {/* Единый контейнер — точно совпадает с max-w-7xl страниц */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Основная строка навбара */}
         <div className="flex items-center justify-between h-16">
@@ -115,7 +113,6 @@ export default function Navbar() {
             </div>
           </nav>
         )}
-      </div>
-    </header>
+    </div>
   )
 }

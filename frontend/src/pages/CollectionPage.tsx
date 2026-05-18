@@ -39,7 +39,7 @@ export default function CollectionPage() {
   )
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex flex-col">
+    <div className="min-h-[calc(100vh-64px)] flex flex-col w-full">
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         <div className="flex items-center justify-between mb-8">

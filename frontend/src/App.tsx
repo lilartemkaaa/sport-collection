@@ -25,9 +25,13 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-900 overflow-x-hidden">
-      <Navbar />
-      <main>{children}</main>
+    <div className="min-h-screen bg-slate-900 overflow-x-hidden flex flex-col items-center w-full">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-900/95 backdrop-blur-md">
+        <Navbar />
+      </header>
+      <main className="w-full flex-1 flex flex-col items-center">
+        {children}
+      </main>
     </div>
   )
 }
