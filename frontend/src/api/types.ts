@@ -12,8 +12,10 @@ export interface User {
 export interface Card {
   id: number
   name: string
+  team: string | null
   league: League
   rarity: Rarity
+  position: string | null
   image_url: string | null
 }
 

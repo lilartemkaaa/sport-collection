@@ -19,9 +19,10 @@ export default function AdminPage() {
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(true)
   const [name, setName] = useState('')
+  const [team, setTeam] = useState('')
   const [league, setLeague] = useState<League>('football')
   const [rarity, setRarity] = useState<Rarity>('common')
-  const [imageUrl, setImageUrl] = useState('')
+  const [position, setPosition] = useState('')
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState('')
 
@@ -33,9 +34,17 @@ export default function AdminPage() {
     setError('')
     setCreating(true)
     try {
-      await adminCreateCard({ name, league, rarity, image_url: imageUrl })
+      await adminCreateCard({
+        name,
+        team: team || null,
+        league,
+        rarity,
+        position: position || null,
+        image_url: null,
+      })
       setName('')
-      setImageUrl('')
+      setTeam('')
+      setPosition('')
       await load()
     } catch {
       setError('Ошибка создания карточки')
@@ -68,6 +77,15 @@ export default function AdminPage() {
                 placeholder="Имя спортсмена"
               />
             </div>
+            <div className="sm:col-span-2">
+              <label className={labelCls}>Команда</label>
+              <input
+                value={team}
+                onChange={e => setTeam(e.target.value)}
+                className={fieldCls}
+                placeholder="Название клуба"
+              />
+            </div>
             <div>
               <label className={labelCls}>Лига</label>
               <select value={league} onChange={e => setLeague(e.target.value as League)} className={fieldCls}>
@@ -85,12 +103,12 @@ export default function AdminPage() {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className={labelCls}>URL картинки</label>
+              <label className={labelCls}>Позиция</label>
               <input
-                value={imageUrl}
-                onChange={e => setImageUrl(e.target.value)}
+                value={position}
+                onChange={e => setPosition(e.target.value)}
                 className={fieldCls}
-                placeholder="https://..."
+                placeholder="ВР, ЗАЩ, ПОЛ, НАП..."
               />
             </div>
             {error && <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>}
@@ -127,20 +145,13 @@ export default function AdminPage() {
                   className="flex items-center justify-between gap-3 bg-slate-800
                              border border-slate-700/50 rounded-xl px-4 py-3"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    {card.image_url && (
-                      <img
-                        src={card.image_url}
-                        className="w-9 h-9 rounded-lg object-cover object-top shrink-0"
-                        alt=""
-                      />
-                    )}
-                    <div className="min-w-0">
-                      <p className="text-white text-sm truncate">{card.name}</p>
-                      <p className="text-slate-500 text-xs">
-                        {LEAGUE_LABEL[card.league]} · {RARITY_LABEL[card.rarity]}
-                      </p>
-                    </div>
+                  <div className="min-w-0">
+                    <p className="text-white text-sm truncate">{card.name}</p>
+                    <p className="text-slate-500 text-xs">
+                      {card.team && `${card.team} · `}
+                      {LEAGUE_LABEL[card.league]} · {RARITY_LABEL[card.rarity]}
+                      {card.position && ` · ${card.position}`}
+                    </p>
                   </div>
                   <button
                     onClick={() => handleDelete(card.id)}

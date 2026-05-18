@@ -30,12 +30,30 @@ const leagueLabel: Record<string, string> = {
   nhl:      'NHL',
 }
 
+const leaguePlaceholderBg: Record<string, string> = {
+  football: 'bg-green-950/60',
+  nba:      'bg-orange-950/60',
+  nhl:      'bg-blue-950/60',
+}
+
+const leaguePlaceholderText: Record<string, string> = {
+  football: 'text-green-500',
+  nba:      'text-orange-500',
+  nhl:      'text-blue-500',
+}
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0][0].toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}
+
 export default function CardDisplay({ card }: { card: Card }) {
   return (
     <div className={`h-full border rounded-xl overflow-hidden bg-slate-800 flex flex-col
                      ${rarityBorder[card.rarity]} ${rarityGlow[card.rarity]}`}>
-      {/* Изображение занимает всё свободное пространство карточки */}
-      <div className="flex-1 min-h-0 bg-slate-700 overflow-hidden">
+      <div className={`flex-1 min-h-0 overflow-hidden flex flex-col items-center justify-center gap-3
+                       ${leaguePlaceholderBg[card.league]}`}>
         {card.image_url ? (
           <img
             src={card.image_url}
@@ -43,16 +61,25 @@ export default function CardDisplay({ card }: { card: Card }) {
             className="w-full h-full object-cover object-top"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-slate-600 text-xs uppercase tracking-widest">нет фото</span>
-          </div>
+          <>
+            <span className={`text-4xl font-bold tracking-tight ${leaguePlaceholderText[card.league]}`}>
+              {getInitials(card.name)}
+            </span>
+            {card.position && (
+              <span className="text-slate-500 text-xs uppercase tracking-widest">
+                {card.position}
+              </span>
+            )}
+          </>
         )}
       </div>
-      {/* Подпись — фиксированная нижняя полоска */}
-      <div className="flex-none p-3.5 space-y-2">
+      <div className="flex-none p-3 space-y-1.5">
         <p className="text-white text-xs font-medium truncate leading-snug">{card.name}</p>
+        {card.team && (
+          <p className="text-slate-500 text-xs truncate">{card.team}</p>
+        )}
         <div className="flex items-center justify-between gap-1">
-          <span className="text-slate-500 text-xs shrink-0">{leagueLabel[card.league]}</span>
+          <span className="text-slate-600 text-xs shrink-0">{leagueLabel[card.league]}</span>
           <span className={`text-xs px-1.5 py-0.5 rounded-md font-medium shrink-0 ${rarityBadge[card.rarity]}`}>
             {rarityLabel[card.rarity]}
           </span>
