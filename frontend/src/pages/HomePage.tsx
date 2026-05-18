@@ -6,47 +6,52 @@ import { getMe } from '../api/auth'
 import CardDisplay from '../components/CardDisplay'
 import type { Card, League } from '../api/types'
 
-const PACKS: { league: League; label: string; desc: string }[] = [
-  { league: 'football', label: 'FOOTBALL', desc: 'Лига Чемпионов' },
-  { league: 'nba',      label: 'NBA',      desc: 'Баскетбол' },
-  { league: 'nhl',      label: 'NHL',      desc: 'Хоккей' },
+const PACKS: { league: League; label: string; sub: string }[] = [
+  { league: 'football', label: 'Football', sub: 'Лига Чемпионов' },
+  { league: 'nba',      label: 'NBA',      sub: 'Баскетбол' },
+  { league: 'nhl',      label: 'NHL',      sub: 'Хоккей' },
+]
+
+const DROP_RATES = [
+  { label: 'Common',    pct: '60%', cls: 'text-slate-400' },
+  { label: 'Rare',      pct: '30%', cls: 'text-blue-400' },
+  { label: 'Legendary', pct: '10%', cls: 'text-amber-400' },
 ]
 
 export default function HomePage() {
   const { user, setUser } = useAuth()
   const nav = useNavigate()
   const [wonCard, setWonCard] = useState<Card | null>(null)
-  const [loading, setLoading] = useState<League | null>(null)
+  const [opening, setOpening] = useState<League | null>(null)
   const [error, setError] = useState('')
 
   const handleOpen = async (league: League) => {
     setError('')
     setWonCard(null)
-    setLoading(league)
+    setOpening(league)
     try {
       const result = await openPack(league)
       setWonCard(result.card)
-      const me = await getMe()
-      setUser(me)
+      setUser(await getMe())
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail
       setError(msg ?? 'Недостаточно билетов')
     } finally {
-      setLoading(null)
+      setOpening(null)
     }
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex flex-col items-center py-12 px-4">
-      <div className="w-full max-w-5xl">
+    <div className="min-h-[calc(100vh-64px)] flex flex-col">
+      <div className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8">
 
-        {/* Плашка пользователя */}
-        <div className="w-full bg-slate-800 border border-slate-700/50 rounded-2xl p-6 mb-12
-                        flex flex-col sm:flex-row justify-between items-center gap-4">
+        {/* Панель баланса */}
+        <div className="bg-slate-800 border border-slate-700/50 rounded-2xl px-6 py-5
+                        flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <p className="text-slate-500 text-xs uppercase tracking-widest mb-1">Баланс</p>
+            <p className="text-slate-500 text-xs uppercase tracking-widest mb-2">Баланс</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-light text-indigo-400 tabular-nums leading-none">
+              <span className="text-5xl font-light text-white tabular-nums leading-none">
                 {user?.tickets_balance ?? 0}
               </span>
               <span className="text-slate-500 text-sm">билетов</span>
@@ -54,76 +59,65 @@ export default function HomePage() {
           </div>
           <button
             onClick={() => nav('/quiz')}
-            className="w-full sm:w-auto shrink-0 px-6 py-3 bg-indigo-600 hover:bg-indigo-500
-                       rounded-xl font-semibold text-white text-sm transition-all duration-200
-                       hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:w-auto px-7 py-3 bg-indigo-600 hover:bg-indigo-500
+                       text-white font-semibold text-sm rounded-xl transition-all active:scale-[0.98]"
           >
             Пройти викторину
           </button>
         </div>
 
-        {/* Заголовок бустеров */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-white font-semibold text-base">Открыть бустер</h2>
+        {/* Заголовок паков */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-white font-semibold text-base">Бустеры</h2>
           <span className="text-slate-500 text-sm">10 билетов за пак</span>
         </div>
 
         {error && (
-          <div className="bg-red-950/50 border border-red-900/50 text-red-400 text-sm
-                          px-4 py-3 rounded-xl mb-6">
+          <div className="px-4 py-3 bg-red-950/50 border border-red-900/50 rounded-xl text-red-400 text-sm -mt-4">
             {error}
           </div>
         )}
 
         {/* Сетка паков */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {PACKS.map(p => (
             <div
               key={p.league}
-              className="aspect-[3/4] bg-slate-800 border border-slate-700/50 rounded-2xl p-6
-                         flex flex-col justify-between shadow-xl
-                         hover:-translate-y-2 hover:border-slate-600
-                         transition-all duration-300"
+              className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6
+                         flex flex-col gap-6 hover:border-slate-600 transition-colors"
             >
               <div>
-                <p className="text-white font-bold text-3xl tracking-widest">{p.label}</p>
-                <p className="text-slate-500 text-sm mt-1">{p.desc}</p>
+                <p className="text-white font-bold text-2xl tracking-wide">{p.label}</p>
+                <p className="text-slate-500 text-sm mt-1">{p.sub}</p>
               </div>
 
-              <div className="space-y-2.5">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-500">Common</span>
-                  <span className="text-slate-400 font-mono">60%</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-blue-400">Rare</span>
-                  <span className="text-slate-400 font-mono">30%</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-amber-400">Legendary</span>
-                  <span className="text-slate-400 font-mono">10%</span>
-                </div>
+              <div className="space-y-2">
+                {DROP_RATES.map(r => (
+                  <div key={r.label} className="flex justify-between items-center text-xs">
+                    <span className={r.cls}>{r.label}</span>
+                    <span className="text-slate-400 font-mono">{r.pct}</span>
+                  </div>
+                ))}
               </div>
 
               <button
                 onClick={() => handleOpen(p.league)}
-                disabled={loading !== null}
+                disabled={opening !== null}
                 className="w-full py-3 bg-slate-700 hover:bg-indigo-600
                            disabled:opacity-40 disabled:cursor-not-allowed
-                           text-white font-medium rounded-xl
-                           transition-all duration-200 text-sm"
+                           text-white text-sm font-medium rounded-xl transition-all"
               >
-                {loading === p.league ? 'Открываем...' : 'Открыть за 10 билетов'}
+                {opening === p.league ? 'Открываем...' : 'Открыть за 10 билетов'}
               </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Модальное окно */}
+      {/* Модалка выигрыша */}
       {wonCard && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setWonCard(null)}
         >
           <div
@@ -131,14 +125,14 @@ export default function HomePage() {
             onClick={e => e.stopPropagation()}
           >
             <div className="text-center mb-4">
-              <p className="text-white font-semibold">Новая карточка</p>
+              <p className="text-white font-semibold text-base">Новая карточка</p>
               <p className="text-slate-500 text-xs mt-1">Добавлена в коллекцию</p>
             </div>
             <CardDisplay card={wonCard} />
             <button
               onClick={() => setWonCard(null)}
-              className="mt-4 w-full bg-indigo-600 hover:bg-indigo-500 text-white
-                         py-3 rounded-xl font-semibold transition-all duration-200 text-sm"
+              className="mt-4 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white
+                         text-sm font-semibold rounded-xl transition-all"
             >
               Отлично
             </button>
