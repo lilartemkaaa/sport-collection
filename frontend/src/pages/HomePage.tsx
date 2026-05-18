@@ -37,12 +37,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full max-w-4xl space-y-8">
 
-        {/* Панель пользователя */}
-        <div className="w-full bg-slate-800 border border-slate-700/50 rounded-2xl p-6
-                        flex flex-col sm:flex-row justify-between items-center gap-4">
+        {/* Панель баланса + викторина */}
+        <div className="bg-slate-800 border border-slate-700/50 rounded-2xl p-6 w-full flex justify-between items-center gap-4">
           <div>
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-1">Баланс</p>
             <div className="flex items-baseline gap-2">
@@ -54,7 +53,7 @@ export default function HomePage() {
           </div>
           <button
             onClick={() => nav('/quiz')}
-            className="w-full sm:w-auto shrink-0 px-8 py-3 bg-indigo-600 hover:bg-indigo-500
+            className="shrink-0 px-8 py-3 bg-indigo-600 hover:bg-indigo-500
                        rounded-xl font-semibold text-white text-sm transition-all duration-200
                        hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-900/30"
           >
@@ -76,7 +75,7 @@ export default function HomePage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PACKS.map(p => (
               <div
                 key={p.league}
@@ -85,14 +84,12 @@ export default function HomePage() {
                            hover:-translate-y-1 hover:border-slate-600
                            transition-all duration-300 shadow-lg"
               >
-                {/* Название лиги */}
                 <div className="flex-1 flex flex-col justify-center items-center
                                 text-center px-6 py-10 gap-2">
                   <p className="text-white font-bold text-3xl tracking-widest">{p.label}</p>
                   <p className="text-slate-500 text-sm">{p.desc}</p>
                 </div>
 
-                {/* Шансы дропа */}
                 <div className="px-6 pb-5 space-y-2">
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-slate-500">Common</span>
@@ -108,7 +105,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Кнопка — зафиксирована снизу */}
                 <div className="p-4 border-t border-slate-700/50">
                   <button
                     onClick={() => handleOpen(p.league)}
@@ -127,7 +123,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Модальное окно */}
       {wonCard && (
         <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center
