@@ -33,7 +33,7 @@ export default function Navbar() {
           </Link>
 
           {/* Навигация — десктоп */}
-          <nav className="hidden md:flex items-center gap-1 flex-1">
+          <nav className="hidden md:flex items-center gap-1">
             <NavLink to="/" end className={navLinkCls}>Главная</NavLink>
             <NavLink to="/collection" className={navLinkCls}>Коллекция</NavLink>
             {user?.role === 'admin' && (
