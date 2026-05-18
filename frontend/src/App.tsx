@@ -25,7 +25,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-slate-900 overflow-x-hidden">
       <Navbar />
       <main>{children}</main>
     </div>
