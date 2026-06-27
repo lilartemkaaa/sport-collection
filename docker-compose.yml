@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: cards_user
-      POSTGRES_PASSWORD: cards_pass
-      POSTGRES_DB: cards_db
+      POSTGRES_USER: ${POSTGRES_USER:-cards_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cards_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-cards_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "cards_user", "-d", "cards_db"]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-cards_user}", "-d", "${POSTGRES_DB:-cards_db}"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -19,11 +19,12 @@ services:
   backend:
     build: ./backend
     restart: unless-stopped
+    command: sh -c "alembic upgrade head && python -m app.seed_cli && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://cards_user:cards_pass@db:5432/cards_db
-      SECRET_KEY: change_me_in_production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cards_user}:${POSTGRES_PASSWORD:-cards_pass}@db:5432/${POSTGRES_DB:-cards_db}
+      SECRET_KEY: ${SECRET_KEY:-change_me_in_production}
     depends_on:
       db:
         condition: service_healthy

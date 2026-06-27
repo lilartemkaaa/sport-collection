@@ -67,6 +67,8 @@ docker compose up -d db
 cd backend
 cp .env.example .env
 source .venv/bin/activate        # или .venv\Scripts\activate на Windows
+alembic upgrade head             # применить миграции (создать/обновить схему)
+python -m app.seed_cli           # наполнить базу карточками и вопросами
 uvicorn app.main:app --reload
 ```
 
@@ -82,6 +84,47 @@ npm run dev
 
 ---
 
+## Миграции базы данных
+
+Схемой управляет Alembic. Приложение больше не меняет схему на старте — это делается отдельным шагом (принцип build/release/run).
+
+```bash
+cd backend
+source .venv/bin/activate
+
+alembic upgrade head          # применить все миграции
+alembic downgrade -1          # откатить последнюю миграцию
+alembic history               # список миграций
+alembic revision --autogenerate -m "описание"   # создать новую миграцию по моделям
+```
+
+URL базы берётся из переменной окружения `DATABASE_URL` (см. `.env.example`), в `alembic.ini` он не захардкожен.
+
+В Docker миграции применяются автоматически: команда контейнера бэкенда — `alembic upgrade head && uvicorn ...`.
+
+### Существующая база на проде
+
+Если база уже создана старой версией приложения (через `create_all`) и в ней есть данные, нельзя запускать первую миграцию — таблицы уже существуют. Сначала пометь её состояние первой миграцией, затем накати остальные:
+
+```bash
+alembic stamp dc02abe3fb7d     # пометить, что начальная схема уже есть
+alembic upgrade head           # накатить только новые поля
+```
+
+## Наполнение базы (seed)
+
+Данные карточек и вопросов добавляются вручную, отдельной командой:
+
+```bash
+cd backend
+source .venv/bin/activate
+python -m app.seed_cli
+```
+
+Команда идемпотентна: повторный запуск не дублирует данные.
+
+---
+
 ## Тесты
 
 ```bash
@@ -90,7 +133,7 @@ source .venv/bin/activate
 pytest --cov=app --cov-report=term-missing
 ```
 
-Результат: **100% покрытие**, 37 тестов включая фаззинг через Hypothesis.
+Результат: **~100% покрытие**, 53 теста включая фаззинг через Hypothesis.
 
 ---
 

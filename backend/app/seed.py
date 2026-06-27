@@ -1,6 +1,9 @@
+import logging
 from sqlalchemy.orm import Session
 from app.models.card import Card, League, Rarity
 from app.models.quiz_question import QuizQuestion
+
+logger = logging.getLogger("seed")
 
 # (name, team, position, rarity)
 _FOOTBALL = [
@@ -889,13 +892,16 @@ QUESTIONS = [
 
 
 def seed_db(db: Session) -> None:
-    if db.query(Card).count() != len(CARDS):
-        db.query(Card).delete()
-        db.commit()
+    if db.query(Card).count() > 0:
+        logger.info("Seed: cards already present, skipping")
+    else:
         db.add_all([Card(**c) for c in CARDS])
         db.commit()
+        logger.info("Seed: inserted %d cards", len(CARDS))
 
-    existing = db.query(QuizQuestion).count()
-    if existing < len(QUESTIONS):
-        db.add_all([QuizQuestion(**q) for q in QUESTIONS[existing:]])
+    if db.query(QuizQuestion).count() > 0:
+        logger.info("Seed: questions already present, skipping")
+    else:
+        db.add_all([QuizQuestion(**q) for q in QUESTIONS])
         db.commit()
+        logger.info("Seed: inserted %d questions", len(QUESTIONS))
