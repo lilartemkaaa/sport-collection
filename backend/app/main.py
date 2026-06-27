@@ -1,9 +1,6 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine, SessionLocal, Base
-import app.models  # noqa: F401
-from app.seed import seed_db
 from app.api import auth, quiz, packs, user, admin
 
 app = FastAPI(title="Sports Cards API")
@@ -26,16 +23,6 @@ app.include_router(quiz.router)
 app.include_router(packs.router)
 app.include_router(user.router)
 app.include_router(admin.router)
-
-
-@app.on_event("startup")
-def startup():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    try:
-        seed_db(db)
-    finally:
-        db.close()
 
 
 @app.get("/health")
