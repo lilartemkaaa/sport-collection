@@ -60,6 +60,8 @@ def submit_quiz(
         user.tickets_balance += tickets_earned
 
     session.is_completed = True
+    session.is_correct = is_correct
+    session.selected_option = body.selected_option
     db.commit()
     db.refresh(user)
 
