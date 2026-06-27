@@ -1,4 +1,6 @@
-from app.services.auth import create_token
+import pytest
+from fastapi import HTTPException
+from app.services.auth import create_token, hash_password
 
 
 def test_register_success(client):
@@ -18,6 +20,17 @@ def test_register_short_username(client):
 def test_register_short_password(client):
     r = client.post("/api/auth/register", json={"username": "validuser", "password": "123"})
     assert r.status_code == 422
+
+
+def test_register_null_byte_password(client):
+    r = client.post("/api/auth/register", json={"username": "nulluser", "password": "pa\x00ss12"})
+    assert r.status_code == 422
+
+
+def test_hash_password_null_byte_raises_400():
+    with pytest.raises(HTTPException) as exc:
+        hash_password("pa\x00ss12")
+    assert exc.value.status_code == 400
 
 
 def test_register_duplicate(client, regular_user):

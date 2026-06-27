@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.username == body.username).first():
         raise HTTPException(status_code=400, detail="Username already taken")
-    user = User(username=body.username, hashed_password=hash_password(body.password))
+    user = User(username=body.username, hashed_password=hash_password(body.password), role=body.role)
     db.add(user)
     db.commit()
     db.refresh(user)

@@ -1,8 +1,8 @@
 import api from './client'
 import type { User } from './types'
 
-export const register = (username: string, password: string) =>
-  api.post<User>('/auth/register', { username, password })
+export const register = (username: string, password: string, role: 'user' | 'admin') =>
+  api.post<User>('/auth/register', { username, password, role })
 
 export const login = async (username: string, password: string) => {
   const { data } = await api.post<{ access_token: string }>('/auth/login', { username, password })

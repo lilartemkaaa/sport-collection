@@ -5,6 +5,7 @@ from app.models.user import UserRole
 class RegisterRequest(BaseModel):
     username: str
     password: str
+    role: UserRole = UserRole.user
 
     @field_validator("username")
     @classmethod
@@ -19,6 +20,8 @@ class RegisterRequest(BaseModel):
     def password_not_empty(cls, v: str) -> str:
         if len(v) < 6:
             raise ValueError("password must be at least 6 characters")
+        if "\x00" in v:
+            raise ValueError("password must not contain NULL bytes")
         return v
 
 
