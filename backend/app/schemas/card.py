@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 from app.models.card import League, Rarity
 
 
@@ -22,3 +23,10 @@ class CardCreate(BaseModel):
     rarity: Rarity
     position: Optional[str] = None
     image_url: Optional[str] = None
+
+
+class CollectionItemOut(BaseModel):
+    card: CardOut
+    acquired_at: datetime
+
+    model_config = {"from_attributes": True}
