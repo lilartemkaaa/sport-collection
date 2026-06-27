@@ -25,6 +25,15 @@ class CardCreate(BaseModel):
     image_url: Optional[str] = None
 
 
+class CardUpdate(BaseModel):
+    name: Optional[str] = None
+    team: Optional[str] = None
+    league: Optional[League] = None
+    rarity: Optional[Rarity] = None
+    position: Optional[str] = None
+    image_url: Optional[str] = None
+
+
 class CollectionItemOut(BaseModel):
     card: CardOut
     acquired_at: datetime

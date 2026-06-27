@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getCollection } from '../api/collection'
+import { adminRemoveFromCollection } from '../api/admin'
 import CardDisplay from '../components/CardDisplay'
+import { useAuth } from '../context/AuthContext'
 import type { Card, League } from '../api/types'
 
 type Tab = 'all' | League
@@ -13,6 +15,8 @@ const TABS: { id: Tab; label: string }[] = [
 ]
 
 export default function CollectionPage() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<Tab>('all')
@@ -29,6 +33,12 @@ export default function CollectionPage() {
       })
       .finally(() => setLoading(false))
   }, [])
+
+  const handleRemove = async (cardId: number) => {
+    if (!user) return
+    await adminRemoveFromCollection(user.id, cardId)
+    setCards(prev => prev.filter(c => c.id !== cardId))
+  }
 
   const visible = tab === 'all' ? cards : cards.filter(c => c.league === tab)
 
@@ -87,8 +97,20 @@ export default function CollectionPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 items-stretch">
             {visible.map(card => (
-              <div key={card.id} className="aspect-[3/4] min-h-[280px]">
-                <CardDisplay card={card} />
+              <div key={card.id} className="flex flex-col gap-2">
+                <div className="aspect-[3/4] min-h-[280px]">
+                  <CardDisplay card={card} />
+                </div>
+                {isAdmin && (
+                  <button
+                    onClick={() => handleRemove(card.id)}
+                    className="w-full text-xs font-medium py-1.5 rounded-lg border
+                               border-red-900/50 text-red-400 hover:bg-red-950/40
+                               hover:border-red-700 transition-all duration-200"
+                  >
+                    Убрать из коллекции
+                  </button>
+                )}
               </div>
             ))}
           </div>

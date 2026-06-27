@@ -11,3 +11,5 @@ export const adminCreateCard = (data: {
   image_url?: string | null
 }) => api.post<Card>('/admin/cards', data).then(r => r.data)
 export const adminDeleteCard = (id: number) => api.delete(`/admin/cards/${id}`)
+export const adminRemoveFromCollection = (userId: number, cardId: number) =>
+  api.delete(`/admin/users/${userId}/collection/${cardId}`)
