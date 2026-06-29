@@ -1,11 +1,14 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 from app.models.user import UserRole
 
 
 class RegisterRequest(BaseModel):
+    # Регистрация всегда создаёт обычного пользователя.
+    # Роль нельзя задать снаружи: лишние поля (например role) запрещены.
+    model_config = ConfigDict(extra="forbid")
+
     username: str
     password: str
-    role: UserRole = UserRole.user
 
     @field_validator("username")
     @classmethod

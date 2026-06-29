@@ -33,6 +33,22 @@ def test_hash_password_null_byte_raises_400():
     assert exc.value.status_code == 400
 
 
+def test_register_cannot_set_admin_role(client, db):
+    # Попытка получить роль admin через тело запроса должна провалиться,
+    # а если бы и прошла — пользователь обязан остаться обычным.
+    from app.models.user import User, UserRole
+
+    r = client.post(
+        "/api/auth/register",
+        json={"username": "sneakyadmin", "password": "pass123", "role": "admin"},
+    )
+    assert r.status_code == 422
+
+    created = db.query(User).filter(User.username == "sneakyadmin").first()
+    if created is not None:
+        assert created.role == UserRole.user
+
+
 def test_register_duplicate(client, regular_user):
     r = client.post("/api/auth/register", json={"username": "player", "password": "pass123"})
     assert r.status_code == 400

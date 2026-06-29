@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.schemas.user import RegisterRequest, LoginRequest, TokenResponse, UserOut
 from app.services.auth import hash_password, verify_password, create_token, get_current_user
 
@@ -12,7 +12,8 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.username == body.username).first():
         raise HTTPException(status_code=400, detail="Username already taken")
-    user = User(username=body.username, hashed_password=hash_password(body.password), role=body.role)
+    # Роль жёстко задана: публичная регистрация не может создать администратора.
+    user = User(username=body.username, hashed_password=hash_password(body.password), role=UserRole.user)
     db.add(user)
     db.commit()
     db.refresh(user)

@@ -1,7 +1,10 @@
 import logging
+import os
 from sqlalchemy.orm import Session
 from app.models.card import Card, League, Rarity
 from app.models.quiz_question import QuizQuestion
+from app.models.user import User, UserRole
+from app.services.auth import hash_password
 
 logger = logging.getLogger("seed")
 
@@ -905,3 +908,17 @@ def seed_db(db: Session) -> None:
         db.add_all([QuizQuestion(**q) for q in QUESTIONS])
         db.commit()
         logger.info("Seed: inserted %d questions", len(QUESTIONS))
+
+    # Администратор создаётся только здесь, не через публичную регистрацию.
+    admin_username = os.getenv("ADMIN_USERNAME", "admin")
+    admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+    if db.query(User).filter(User.username == admin_username).first():
+        logger.info("Seed: admin already present, skipping")
+    else:
+        db.add(User(
+            username=admin_username,
+            hashed_password=hash_password(admin_password),
+            role=UserRole.admin,
+        ))
+        db.commit()
+        logger.info("Seed: created admin %r", admin_username)

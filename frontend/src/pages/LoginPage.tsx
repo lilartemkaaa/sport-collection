@@ -8,7 +8,6 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState<'user' | 'admin'>('user')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { setUser } = useAuth()
@@ -19,7 +18,7 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      if (mode === 'register') await register(username, password, role)
+      if (mode === 'register') await register(username, password)
       await login(username, password)
       const me = await getMe()
       setUser(me)
@@ -93,28 +92,6 @@ export default function LoginPage() {
                 className={inputCls}
               />
             </div>
-
-            {mode === 'register' && (
-              <div>
-                <label className="block text-xs text-slate-500 uppercase tracking-widest mb-2">
-                  Роль
-                </label>
-                <div className="flex bg-slate-900 rounded-xl p-1">
-                  {(['user', 'admin'] as const).map(r => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setRole(r)}
-                      className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
-                        role === r ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      {r === 'user' ? 'Пользователь' : 'Администратор'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {error && (
               <div className="bg-red-950/50 border border-red-900/50 rounded-xl px-4 py-3 text-red-400 text-sm">
